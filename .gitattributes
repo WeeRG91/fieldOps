@@ -1,0 +1,19 @@
+# Normalize text files and check them out with LF endings
+* text=auto eol=lf
+
+# Preserve binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.zip binary
+
+# Windows command scripts require CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
