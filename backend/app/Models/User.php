@@ -84,6 +84,25 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             ]);
     }
 
+    public function hasStaffRole(): bool
+    {
+        if (! $this->exists) {
+            return false;
+        }
+
+        return $this->getConnection()
+            ->table('user_roles')
+            ->where('user_id', $this->getKey())
+            ->whereIn(
+                'role',
+                array_map(
+                    static fn (StaffRole $role): string => $role->value,
+                    StaffRole::cases(),
+                ),
+            )
+            ->exists();
+    }
+
     public function isActive(): bool
     {
         return $this->is_active;

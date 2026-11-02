@@ -4,7 +4,9 @@
 
 Tasks 01–05 established planning, runtime, PostgreSQL, and authorization design.
 Task 06 role/activation persistence is implemented and approved on 2026-11-02.
-Authorization enforcement and provisioning remain unimplemented.
+Task 07 staff access, first-Administrator bootstrap and audit are implemented
+and approved on 2026-11-02. General staff administration, invitations, resource
+authorization and comprehensive revocation remain deferred.
 Database-backed tests and runtime-isolation verification were explicitly deferred.
 Historical task sections describe their respective checkpoints.
 
@@ -865,3 +867,95 @@ Last-Administrator concurrency, provisioning/invitations, revocation, and
 resource authorization remain future work under Task 05's approved design.
 Existing fontaine/React/PHPStan-memory/CI/infrastructure limitations remain.
 Do not interpret this completion as permission to implement subsequent tasks.
+
+## Task 07 — Controlled access, bootstrap and audit, 2026-11-02
+
+Implemented by the developer; results and verification limitations approved.
+This supersedes earlier wholly-deferred enforcement/audit statements. Task 05's
+role matrix and explicit-role design remain the target; no global admin bypass.
+
+### Staff boundary and account routes
+
+User::hasStaffRole() checks recognized StaffRole values on the model connection.
+Eligible staff requires is_active and at least one recognized role; normal staff
+pages also require verification. Multiple roles are supported.
+EnsureStaffAccess is the staff alias and optional middleware appended to the
+web stack. Optional mode lets guests reach public/auth routes; authenticated
+inactive/roleless users are logged out, their current session invalidated and
+CSRF token regenerated, then denied with generic 403. Logout is exempt.
+Dashboard and all settings groups explicitly use auth/staff/verified.
+This is baseline admission, not resource-level authorization.
+
+Fortify password callback and Passkeys::authorizeLoginUsing enforce eligibility.
+Password handling retains a 200 ms Timebox and rehash-on-login behavior.
+The middleware rechecks session login.id for pending two-factor challenges;
+invalid candidates lose the challenge state. Known two-factor/passkey management
+and profile/password update routes require verified email. Eligible unverified
+users retain verification access; guests retain login/password recovery routes.
+End-to-end checks of these paths are incomplete.
+
+Fortify registration feature/view, public links and Register.vue are removed.
+CreateNewUser remains registered but no public registration route is enabled.
+Self-deletion route/controller operation and DeleteUser.vue are removed.
+Profile.vue makes email read-only; server rules require it unchanged and reject
+privileged role/state input. ProfileController writes only name. Email changes
+are blocked pending last-usable-Administrator safeguards.
+
+### Controlled first Administrator
+
+BootstrapAdministratorCommand exposes staff:bootstrap-admin through Laravel
+Signature/Description attributes. Noninteractive use is refused by implementation.
+It displays actual database/role and explicitly confirms existing promotion and
+final activation. New passwords use hidden input with no visible fallback and
+12-character/mixed-case/number/symbol validation. Existing name/password/email
+verification are preserved. New accounts remain unverified; notification follows
+commit. Delivery failure leaves committed provisioning intact and offers resend.
+
+BootstrapAdministrator validates/normalizes email, requires PostgreSQL and uses
+pg_try_advisory_xact_lock with shared namespace/key (71001, 1) within its
+transaction. It refuses ANY Administrator assignment, even inactive/unverified,
+and repeats this check under the lock. Case-insensitive email collisions,
+changed selected account and previous deactivation metadata cause refusal.
+Selected existing users are row-locked. User ID 1 was promoted and activated;
+no Dispatcher or Technician role was implied. Bootstrap is not recovery.
+
+The advisory lock coordinates only callers using the same key. It does not
+protect against arbitrary direct writes or future staff-mutation code. General
+last-admin concurrency remains future work; no concurrency/fault test was run.
+PostgreSQL-specific locking cannot be established by SQLite tests.
+
+### Minimal audit
+
+2026_11_02_123148_create_audit_events_table adds id, event (120 characters),
+actor_type (console/user/system), nullable actor_id/subject_id user foreign keys
+with restricted deletion, timezone-aware occurred_at and nullable JSON metadata.
+AuditEvent has no automatic timestamps, immutable datetime and array casts.
+No application audit editing/deletion interface was introduced.
+
+Account activation, Administrator assignment and success event share the same
+connection/transaction. staff.administrator_bootstrapped records console actor,
+null actor_id, target ID, account_source, assigned_roles and before/after activation.
+Console denotes invocation channel, not an independently identified human operator.
+No secrets belong in metadata. Refusal/failure records use sanitized application
+logs outside the transaction; rolled-back audit rows are not durable history.
+Logs were not independently inspected. Database-owner tamper resistance, broader
+audit access/validation and retention are deferred.
+
+### Verification boundary
+
+Confirmed fieldops_dev / fieldops_app before additive audit migration. Bootstrap
+reported success; repeat refused. Audit inspection found exactly one event:
+console/null actor, subject 1, promoted, administrator, activation false to true.
+Atomicity was source-reviewed, not tested by forced failure.
+Promoted login/dashboard, read-only profile email, absent self-deletion and
+GET /register 404 passed manually. Pint 62, PHPStan 47 at 512 MiB, frontend
+types, lint/format 66/60 and production build passed.
+
+No automated tests or separate syntax command ran. Inactive/roleless and guest/
+JSON denial, POST registration, privileged profile payloads, remember-me,
+password recovery, 2FA/passkeys, eligible unverified flows, new-account bootstrap,
+notification failure, noninteractive/collision/deactivation refusal, rollback
+and simultaneous bootstrap remain unverified. Test isolation remains unverified.
+User approved these limitations. No PostgreSQL automated suite introduced.
+General staff UI, invitations, full revocation, last-admin safeguards, resource
+policies and controlled console recovery remain deferred.

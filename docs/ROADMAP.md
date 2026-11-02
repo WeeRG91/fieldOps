@@ -11,7 +11,7 @@ were approved on 2026-11-01. Task 04 PostgreSQL development and authentication
 smoke verification are complete; automated tests were skipped by user request.
 Task 04 results and that testing exception were approved on 2026-11-01.
 
-Task 05 design and Task 06 persistence are complete; see the current progress section below.
+Tasks 01–07 are complete and approved; see the latest progress section below.
 Business scope, architecture, and engineering conventions are approved.
 
 The Laravel/Vue starter application exists in backend/; no business modules exist.
@@ -356,7 +356,7 @@ Start by recovering project context and agreeing exact scope, account-state
 defaults, existing-account handling, acceptance criteria, and test authorization.
 Do not treat this roadmap as approval to run migrations or change accounts.
 
-## Current progress after Task 06 — 2026-11-02
+## Historical checkpoint after Task 06 — 2026-11-02
 
 Tasks 01–06 are complete and approved. Task 06 implements role/activation
 persistence only; role and activation enforcement remain future work.
@@ -373,3 +373,23 @@ Agree exact scope before coding, including placement of required audit storage,
 bootstrap/existing-account handling, verification access, and test expectations.
 Do not begin audit-dependent privileged workflows without their required audit
 foundation. No Redis/queue/Reverb/Expo or domain features are implicitly authorized.
+
+## Current progress after Task 07 — 2026-11-02
+
+Tasks 01–07 complete with user approval. Task 07 implemented baseline staff
+admission, closed public registration/self-deletion, name-only profile updates,
+interactive first-admin bootstrap and transactional audit. Audit storage deferred
+from Task 06 is now implemented. User ID 1 was promoted with one success event.
+
+Static/build checks and selected browser/PostgreSQL checks passed; see TASK_LOG.md.
+No automated tests ran. User approved gaps including inactive/roleless denial,
+other authentication/recovery paths, rollback/new-account/concurrency scenarios
+and isolation verification. These are follow-ups, not verified scenarios.
+
+Recommended next Task 08: staff administration for active verified Administrators,
+reject self role/state changes, last-usable-Administrator concurrency safeguards,
+session/remember-me/token revocation where applicable, and transactional audit
+for privileged changes. Agree exact scope and verification before coding.
+Keep profile email changes blocked until safety rules exist. Invitations remain
+Task 09; broader authorization coverage and controlled recovery Task 10.
+Deferred Task 07 checks require agreed scope; no infrastructure implicitly authorized.

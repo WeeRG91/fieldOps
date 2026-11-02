@@ -15,7 +15,10 @@ Task 04 switched development storage to PostgreSQL and manually verified
 starter authentication; results and automated-test skip approved on 2026-11-01.
 Task 05 authorization design is approved. Task 06 implemented role and activation
 persistence, approved on 2026-11-02 with database-backed tests deferred.
-Staff access enforcement/provisioning and operational modules remain unimplemented.
+Task 07 controlled staff access, closed public registration/self-deletion and
+first-Administrator bootstrap with audit are implemented. Results and verification
+limitations were approved on 2026-11-02. General staff administration, invitations
+and operational modules remain future work.
 Business scope is unchanged.
 
 ## Purpose

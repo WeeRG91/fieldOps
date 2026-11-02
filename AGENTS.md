@@ -211,3 +211,48 @@ Reuse verified results; batch related steps and avoid repeated unchanged checks.
 User still writes code and runs installation/migration commands. Verify the actual
 target before a database-changing migration; prefer interactive Tinker over
 quoted inline commands through Herd's Windows batch launcher.
+
+## Task 07 implemented staff access, bootstrap and audit
+
+Task 07 results and verification limitations were approved on 2026-11-02.
+This supersedes Task 06's transitional login behavior. EnsureStaffAccess runs
+in optional web mode and through the staff alias. Dashboard/settings require
+auth/staff/verified. Ineligible authenticated users are logged out, the current
+session invalidated and a generic 403 returned. Logout remains available;
+eligible unverified users retain verification access. Password/passkey callbacks
+and pending two-factor challenge have eligibility checks. These implementations
+are not all manually verified. No global Administrator bypass or complete RBAC.
+
+Public registration and staff self-deletion routes/UI are removed. Profile
+writes name only; changed email and privileged role/state fields are rejected.
+Keep email changes blocked until last-usable-Administrator safety is implemented.
+
+staff:bootstrap-admin is interactive only, displays the target, confirms existing
+promotion/final activation and refuses ANY existing Administrator assignment.
+User ID 1 is already active with Administrator; do not rerun as routine setup.
+Existing password/name/verification were preserved. No default credentials.
+BootstrapAdministrator requires PostgreSQL and uses a transaction-scoped advisory
+try-lock (71001, 1), rechecks first-admin/account conditions, and commits activation,
+role and success audit together. This coordinates cooperating bootstrap calls
+only; it does not supply general last-admin protection. Recovery remains future.
+
+AuditEvent/audit_events exist; audit migration applied to fieldops_dev /
+fieldops_app. One bootstrap event verified after repeat refusal: console actor,
+null actor_id, subject 1, promoted, administrator, activation false to true.
+Console identifies the invocation channel, not an independently authenticated
+human operator. Failures/refusals use sanitized application logs outside the
+transaction; rolled-back rows are not durable failure history. No audit UI.
+
+Developer checks: Pint 62 files; PHPStan 47 at 512 MiB; frontend types; vp check
+66 formatted / 60 linted; production build all passed. Manual promoted-account
+login/dashboard, read-only email, absent deletion, GET /register 404, bootstrap
+success/repeat refusal/audit inspection passed. No automated tests or separate
+php -l run in Task 07. Inactive/roleless rejection, POST registration, other auth
+paths, new-account bootstrap, rollback and concurrency remain unverified.
+Test isolation remains unverified; user approved these limitations. Agree future
+test scope before execution. Reuse verified results instead of repeating checks.
+
+Git now has commits and origin https://github.com/WeeRG91/fieldOps.git.
+Branch feat/staff-access-bootstrap tracks its origin branch. Staged/unstaged
+changes remain; do not stage, commit or reset automatically. Recommended next:
+Task 08 staff administration, last-admin safeguards, revocation and audit.

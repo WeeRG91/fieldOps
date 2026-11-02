@@ -3,7 +3,6 @@ import { Form, Head, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import DeleteUser from '@/components/DeleteUser.vue';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -30,13 +29,13 @@ const user = computed(() => page.props.auth.user);
 <template>
     <Head title="Profile settings" />
 
-    <h1 class="sr-only">Profile settings</h1>
+    <h1 class="sr-only">Update your name</h1>
 
     <div class="flex flex-col space-y-6">
         <Heading
             variant="small"
             title="Profile"
-            description="Update your name and email address"
+            description="Update your name"
         />
 
         <Form
@@ -67,9 +66,15 @@ const user = computed(() => page.props.auth.user);
                     name="email"
                     :default-value="user.email"
                     required
+                    readonly
                     autocomplete="username"
                     placeholder="Email address"
                 />
+
+                <p class="text-sm text-muted-foreground">
+                    Email changes are temporarily unavailable.
+                </p>
+
                 <InputError class="mt-2" :message="errors.email" />
             </div>
 
@@ -100,6 +105,4 @@ const user = computed(() => page.props.auth.user);
             </div>
         </Form>
     </div>
-
-    <DeleteUser />
 </template>
