@@ -5,8 +5,10 @@
 Tasks 01–05 established planning, runtime, PostgreSQL, and authorization design.
 Task 06 role/activation persistence is implemented and approved on 2026-11-02.
 Task 07 staff access, first-Administrator bootstrap and audit are implemented
-and approved on 2026-11-02. General staff administration, invitations, resource
-authorization and comprehensive revocation remain deferred.
+and approved on 2026-11-02. Task 08 existing-account staff administration,
+last-Administrator safeguards, audit and supported browser revocation are
+implemented and approved on 2026-11-02 with manual-only verification. Invitations,
+operational resource authorization and broader revocation remain deferred.
 Database-backed tests and runtime-isolation verification were explicitly deferred.
 Historical task sections describe their respective checkpoints.
 
@@ -959,3 +961,96 @@ and simultaneous bootstrap remain unverified. Test isolation remains unverified.
 User approved these limitations. No PostgreSQL automated suite introduced.
 General staff UI, invitations, full revocation, last-admin safeguards, resource
 policies and controlled console recovery remain deferred.
+
+## Task 08 — Staff administration and revocation, 2026-11-02
+
+Developer implemented; user approved manual results and gaps. No new schema,
+dependency, operational module or broad RBAC engine. Task 05 role model preserved.
+
+### Authorization and HTTP
+
+UserPolicy discovers by convention. Only active verified Administrators view
+all existing accounts/manage others. updateRoles/activate/deactivate deny self;
+no global bypass. Identity/password/verification editing and hard deletion absent.
+Profile email changes stay blocked. StaffController paginates20 in ID order,
+batches page roles in one query, explicitly presents fields. Authorized details
+include metadata normally hidden by User serialization.
+Three Form Requests authorize bound {staff}, validate roles/reason, reject specified
+privileged/identity input. Controllers pass validated input only to action.
+Routes: GET /staff (staff.index), GET /staff/{staff} (staff.show), PATCH
+/staff/{staff}/roles (staff.roles.update), POST /staff/{staff}/activate and
+POST /staff/{staff}/deactivate. All auth/staff/verified with numeric model binding.
+Read policy middleware; writes authorized before confirmation, in request and
+freshly inside action. No staff-creation endpoint.
+RequireStaffPasswordConfirmation uses Fortify timestamp/configured timeout
+(10800 seconds default), authorizes first, returns423 for expired JSON or redirects
+browser through confirmation to GET details. Explicit resubmission, no replay.
+Browser path verified; JSON branch not checked.
+
+### Shared transaction and usable Administrator
+
+ManageStaffAccess has replaceRoles/activate/deactivate, requires persisted users
+on application connection, PostgreSQL and no enclosing transaction. Sets READ
+COMMITTED before reads, takes pg_try_advisory_xact_lock(71001, 1), locks actor/
+subject in ascending ID order, reloads authorization, mutates/revokes/audits,
+checks an active verified Administrator exists before commit. Any exception
+rolls back all related writes. Final last-admin failure branch not directly tested.
+Shared global lock is simple for infrequent staff administration; same key as
+bootstrap. Busy conflict refuses, does not wait. Deterministic row order reduces
+but does not eliminate deadlocks. Future protected writes must cooperate; SQL/
+internal role helpers bypass safeguards. Nested/SQLite calls fail explicitly.
+Manual contention used Tinker-held lock plus separate browser mutation/retry,
+not two fully concurrent staff actions or exhaustive interleavings. SQLite cannot
+prove this PostgreSQL protocol; no automated PostgreSQL suite introduced.
+
+Roles are complete nonempty distinct enum-value lists. Sorted unchanged selection
+is a no-op. Deactivation requires trimmed reason <=1000 and retains roles.
+Reactivation requires explicit full role selection, clears current deactivation
+fields, leaves verification/password unchanged; unverified activation does not
+permit verified-only pages. Redundant state transitions rejected by source, not
+directly exercised. Prior deactivation audit retains history.
+
+### Audit, revocation and conflicts
+
+Existing audit schema reused. staff.roles_replaced/staff.activated/staff.deactivated
+record user actor/subject, time, selected before/after roles/state, grants/revocations
+and reason where applicable. No secrets; same connection/transaction as mutation.
+No-op has no event. No rolled-back-row failure history claim. No audit management
+UI, retention or database-owner tamper resistance added.
+Every actual role/state change rotates remember_token and deletes currently stored
+database sessions; require database driver on SAME application connection or
+throw/rollback. Role-change refresh forced re-login, deactivation refresh/fresh
+login denied. Cookie remember-me behavior untested. Running requests may complete
+and concurrent requests may rewrite sessions. No auth generation/epoch guarantee,
+API token infrastructure or WebSocket disconnect capability. Next requests still
+enforce current eligibility/policies; no immediate cancellation claim.
+bootstrap/app.php renders ConflictHttpException only on three staff Inertia write
+routes as303 redirect with errors.staff. Existing form lists display retry message,
+preserve selection and keep saved state. Other clients keep normal 409. Manual
+old debug popup reproduced, then friendly inline conflict verified. No broad
+suppression of exceptions.
+
+### Interface, fixture and verification boundary
+
+Typed Vue staff/Index/Show use selected props/Wayfinder, pagination, separate
+activation/verification indicators, read-only identity/current roles, role/state
+forms, confirmation prompts, validation and processing controls. Self forms hidden.
+Policy-derived auth.canManageStaff controls AppSidebar visibility only; backend
+remains authoritative. No new UI library; multi-page navigation not exercised.
+Fixture 2 fieldops.manual@example.test manually verified only for testing; last
+confirmed roles Dispatcher, finally INACTIVE with deactivated_by=1 and completion
+reason. Retained with history, not deleted. Primary1 remains active/verified/admin.
+Console query builder inspected hidden metadata without removing model safeguards.
+
+Full Pint checkpoint 69 passed, later changed PHP files targeted formatting passed;
+latest PHPStan 54 at 512 MiB no errors. Frontend format/lint/build/types passed by
+report, no counts supplied. No automated tests/new tests/separate php -l or SQLite
+isolation verification. Direct action checks are not HTTP payload coverage.
+Forced audit/mutation rollback, final last-admin failure, remember-me/in-flight
+races, HTTP privileged payloads, JSON branches, exhaustive concurrency, multi-page
+pagination and inherited auth gaps remain unverified with user approval.
+Old starter tests/factory assume roleless inactive users have access, email edits
+and self-delete; registration suite skips instead of checking denial. Future test
+scope/isolation and PostgreSQL-only/nonnested action strategy need agreement.
+Invitations Task 09; coverage/recovery later. Redis/queues/Horizon/Reverb remain
+visible planned infrastructure, not installed/configured by Task 08.

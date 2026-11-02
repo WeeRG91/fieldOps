@@ -7,7 +7,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -33,4 +35,28 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(function (
+            ConflictHttpException $exception,
+            Request $request
+        ): ?RedirectResponse {
+            if (
+                ! $request->header('X-Inertia')
+                || ! $request->routeIs(
+                    'staff.roles.update',
+                    'staff.activate',
+                    'staff.deactivate',
+                )
+            ) {
+                return null;
+            }
+
+            return to_route(
+                'staff.show',
+                ['staff' => $request->route('staff')],
+                303,
+            )->withErrors([
+                'staff' => 'Another staff change is running. Please retry.',
+            ]);
+        });
     })->create();

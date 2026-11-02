@@ -2,155 +2,173 @@
 
 ## Current milestone and task
 
-Identity/access foundation. Tasks 01–07 complete. Task 07 controlled staff access,
-first-Administrator bootstrap and audit foundation results and verification gaps
-approved on 2026-11-02. User explicitly authorized all continuity-file updates.
-TASK_LOG.md preserves historical checkpoints and execution evidence.
+Identity/access foundation. Tasks 01–08 complete. Task 08 staff administration,
+last-Administrator protection and supported revocation implemented; manual results
+and explicit gaps approved on 2026-11-02. User authorized six-file closeout.
+TASK_LOG.md preserves historical checkpoints and actual evidence.
 
-## Collaboration
+## Collaboration and testing boundary
 
-Read AGENTS.md, this handover and relevant docs/source before proposing work.
-Developer writes application code and runs installation, migration and checks;
-assistant explains/reviews. Documentation editing authorized for this closeout
-only. No implicit permission to implement/commit subsequent tasks.
-Batch meaningful work and reuse verified facts; avoid repeated unchanged checks.
-No automated tests ran in Task 07. User approved recording remaining security
-verification gaps. Agree future scope and isolation before database-backed tests.
+Read AGENTS and relevant continuity/source first. Developer writes code/runs
+commands; assistant mentors/reviews. No auto application edits, installs, migrations,
+staging or commits. This permission covers documentation closeout only.
+Batch meaningful checks/reuse verified facts. User chose MANUAL VERIFICATION ONLY
+for Task 08; no automated tests/new tests/separate php -l/runtime isolation check.
+Agree future scope/isolation and PostgreSQL-only action test strategy before tests.
 
-## Runtime and repository
+## Repository and runtime
 
 C:\Sites\FieldOps, app backend/, WSL /mnt/c/Sites/FieldOps. Herd serves
 http://fieldops.test from backend/ with PHP 8.5 isolation. Use herd php and herd
-composer from backend/. Plain PHP can select 8.3. Windows/Herd handles web,
-Composer and frontend; WSL Redis/future Linux workers; Docker optional.
+composer in backend/. Windows/Herd web/Composer/frontend; WSL Redis/future Linux
+workers. Docker optional. No mobile app/operational domain modules.
+Recorded runtime, not re-audited Task 08: Laravel 13.39.0/PHP 8.5.10, Composer 2.11.1,
+Node 22.23.4/npm 10.9.9, Vue 3.5.44/TypeScript 5.9.3, Inertia Laravel 3.6.0/frontend 3.10.0,
+Vite+ 1.4.0; Ubuntu PHP 8.5.4/Redis 8.10.1.
+Origin https://github.com/WeeRG91/fieldOps.git. Task 07 merged to main at 9f06938,
+old feature branch removed. Current feat/staff-administration; latest commit 9f06938.
+Task 08 staged/unstaged/untracked changes; action/new Vue/types include AM mixed
+snapshots. project-commands.txt untracked. Do not commit partial staged versions.
+Assistant did not stage/commit/push. Earlier Git snapshots are historical.
 
-Recorded versions (not re-audited in Task 07): Laravel 13.39.0, Herd PHP 8.5.10,
-Composer 2.11.1, Vue 3.5.44, TypeScript 5.9.3, Inertia Laravel 3.6.0/frontend
-3.10.0, Vite+ 1.4.0, Node 22.23.4/npm 10.9.9. Ubuntu PHP 8.5.4, Redis 8.10.1.
-No mobile app, domain modules, Redis PHP client/Horizon/Reverb implementation.
+## PostgreSQL and retained accounts
 
-Origin https://github.com/WeeRG91/fieldOps.git. Latest inspected commit 70e8693,
-chore: initialize FieldOps foundation. Branch feat/staff-access-bootstrap tracks
-origin/feat/staff-access-bootstrap. Task 07 changes remain staged/unstaged/untracked;
-action has mixed staged/worktree changes, DeleteUser deletion staged. Do not
-stage/reset/commit without permission. project-commands.txt is untracked notes.
-Earlier no-commit/no-remote records in historical tasks no longer describe current Git.
-
-## PostgreSQL and privileged account
-
-Windows PostgreSQL 18.6, 127.0.0.1:5432, fieldops_dev / fieldops_app. Dedicated
-role owns DB/schema migration privileges, without superuser/CREATEDB/CREATEROLE/
-replication/BYPASSRLS (Task 04). Effective SQL database/role confirmed immediately
-before Task 07 additive audit migration. Five starter migrations, two Task 06
-migrations and 2026_11_02_123148_create_audit_events_table applied. No reset.
-
-.env uses pgsql; safe .env.example has blank secrets. Sessions/cache/queues remain
-database-backed; mail log. Old SQLite dev file retained. Never record passwords,
-hashes, app keys or signed verification links in reports.
-Existing user ID 1 now active with Administrator via explicit bootstrap promotion.
-Name/password/verification preserved by implementation; manual login/dashboard passed.
-No operational role implied. Do not repeat bootstrap as routine setup or weaken
-its existing-admin refusal; controlled recovery is not yet implemented.
+Windows PostgreSQL 18.6, 127.0.0.1:5432, fieldops_dev/fieldops_app. Dedicated owner
+migration role without superuser/CREATEDB/CREATEROLE/replication/BYPASSRLS from
+Task 04. SQL target rechecked Task 08 before fixture creation. No reset or Task 08
+migration; eight existing migrations (five starter, two identity, one audit) remain
+applied from prior tasks. .env pgsql; example blank secrets. Sessions/cache/queues
+database-backed, mail log. No secrets/hashes/signed links in reports.
+Primary user 1 active/verified/Administrator only, final join query verified.
+Fixture user 2 Manual Staff, fieldops.manual@example.test, retained INACTIVE; last
+confirmed roles Dispatcher. Final deactivated_by=1, timestamp present, reason
+'Task 08 manual verification complete'. History retained; do not delete blindly.
+Query builder inspected hidden metadata; do not remove model serialization guards.
+Fixture email manually verified only for testing, not public provisioning. Password
+entered hidden without visible fallback, never documented.
 
 ## Implemented architecture
 
-Task 05 approved design remains in ARCHITECTURE.md: three explicit roles,
-multiple roles, no admin universal bypass, no permissions package. Task 06 enum,
-user_roles composite key, activation/deactivation metadata and internal role
-helpers remain. Helpers are persistence, not caller authorization.
+Fixed StaffRole/multiple assignments/no global admin bypass remain. Task 07 staff
+middleware/password/passkey/2FA checks, closed registration/self-delete, name-only
+profile, first-admin bootstrap and audit remain. Bootstrap already used/refuses
+ANY admin assignment; no recovery yet. Keep profile email changes blocked.
 
-Task 07 User::hasStaffRole checks recognized enum assignments. EnsureStaffAccess
-runs optional in web and via staff alias. Dashboard/settings auth/staff/verified;
-ineligible authenticated accounts lose current session and receive generic 403.
-Logout exempt; eligible unverified accounts retain verification. Password/passkey
-callbacks and pending two-factor candidate enforce eligibility. Auth-management
-routes require verified email. These paths have incomplete runtime coverage.
-Public registration feature/view/links and Register.vue removed; self-deletion
-route/controller/component removed. Name-only profile writes; changed email and
-privileged role/state payloads rejected server-side. Keep email changes blocked
-until last-usable-admin safeguards are implemented.
+Task 08 UserPolicy allows active verified admin directory/details/manage others,
+rejects all self role/state changes. All existing users visible including inactive/
+roleless; no creation, delete, identity/password/verification editing.
+ManageStaffAccess replaceRoles/activate/deactivate owns top-level PostgreSQL READ
+COMMITTED, rejects nesting/other drivers, takes try-advisory lock (71001, 1), locks
+actor/subject by ascendingID, reloads policy authority, mutates/revokes/audits,
+checks active verified admin remains before commit. Exceptions roll back together.
+Key shared with bootstrap; future invitation/recovery writes must cooperate.
+Direct SQL/internal helpers bypass safeguards. Last-admin failure branch untested.
+Complete nonempty distinct roles; sorted no-op skips mutation/revocation/audit.
+Inactive roles retained; reactivation explicitly selects roles/clears metadata,
+leaves verification/password unchanged. Deactivation needs reason<=1000, retains
+roles, records actor/time/reason. Redundant state transitions rejected by source.
 
-BootstrapAdministratorCommand (staff:bootstrap-admin) is interactive, displays
-actual database/role and requires promotion/final confirmation. New passwords
-hidden without fallback, minimum 12/mixed case/numbers/symbols; new account remains
-unverified. Existing identity/password/verification preserved. PostgreSQL action
-uses transaction-scoped advisory try-lock (71001, 1), refuses ANY Administrator
-assignment, rechecks selected account/collisions/deactivation, locks existing row.
-Activation/role/audit commit together. Notify after commit; delivery failure does
-not undo creation. Lock coordinates cooperating bootstrap calls only, not general
-last-admin mutation. No concurrency or fault-injection test performed.
+Audit existing schema: staff.roles_replaced/staff.activated/staff.deactivated,
+user actor/subject/time, selected role/state before-after/grants/revocations/reason.
+Same transaction, no secrets or rollback-row failure-history claim. No audit UI,
+retention/tamper resistance. First three mutation rows independently inspected;
+subsequent rows not separately inspected/count-reconciled.
+Every actual role/state change rotates remember_token/deletes currently stored
+database sessions on SAME app connection. Unsupported driver/connection fails.
+Role-change refresh forced re-login; deactivation refresh/fresh login denied.
+Running requests can finish/concurrent requests can rewrite sessions; no auth
+version/epoch/cancellation guarantee. Remember-me cookie itself untested.
+No Sanctum tokens or Reverb/WebSocket infrastructure to revoke.
 
-AuditEvent/audit_events: event, actor type, nullable actor/subject FKs with restrict
-delete, timezone-aware occurred_at, JSON metadata; no automatic model timestamps.
-Immutable datetime/array casts defined; no audit management UI. Successful event
-staff.administrator_bootstrapped: console actor/null actor_id, subject user ID,
-promotion/role/activation metadata. Console is invocation channel, not separately
-authenticated human identity. Refusal/failure uses sanitized app logs outside tx;
-rolled-back audit rows do not persist. Database-owner tamper resistance deferred.
+## HTTP and Vue interface
 
-## Task 07 files
+StaffController explicit fields, page size 20, one batched role query/page. Authorized
+details include metadata otherwise hidden on User. Three requests authorize bound
+User/validate roles or reason/reject specified identity and privileged input.
+Thin writes pass validated values only to action.
+GET /staff, GET /staff/{staff}, PATCH /staff/{staff}/roles,
+POST /staff/{staff}/activate, POST /staff/{staff}/deactivate: auth/staff/verified,
+numeric binding. Read policy middleware; writes authorize before password prompt,
+in request and fresh in action. RequireStaffPasswordConfirmation uses Fortify
+timestamp/auth.password_timeout(10800 default); expired browser writes return via
+confirmation to GET details for explicit resubmission, JSON 423 by source.
+bootstrap/app.php catches staff-route Inertia ConflictHttpException only:303
+redirect/errors.staff display inline, preserve input, saved state unchanged.
+Other clients keep normal 409. Manual old debug popup replaced and retested.
+Typed staff/Index/Show have pagination, separate active/verified status, current
+roles/read-only identity, role/state forms/confirmations/reason/errors/processing.
+Self controls hidden. Policy auth.canManageStaff drives AppSidebar only, not backend
+security. Wayfinder --with-form --skip-database generated. No UI dependency added.
 
-Created by developer:
+## Files changed in Task 08
 
-- backend/app/Actions/Staff/BootstrapAdministrator.php.
-- backend/app/Console/Commands/BootstrapAdministratorCommand.php.
-- backend/app/Http/Middleware/EnsureStaffAccess.php.
-- backend/app/Models/AuditEvent.php.
-- backend/database/migrations/2026_11_02_123148_create_audit_events_table.php.
+Created:
 
-Modified: User.php, FortifyServiceProvider.php, bootstrap/app.php, config/fortify.php,
-routes/web.php, routes/settings.php, Settings/ProfileController.php,
-Settings/ProfileUpdateRequest.php, pages/Welcome.vue, auth/Login.vue and
-settings/Profile.vue. Deleted auth/Register.vue and components/DeleteUser.vue
-under resources/js. Task 07 did not change tests or install dependencies.
-Assistant updated AGENTS.md and the five continuity docs only, with authorization.
+- backend/app/Policies/UserPolicy.php.
+- backend/app/Actions/Staff/ManageStaffAccess.php.
+- backend/app/Http/Controllers/Staff/StaffController.php.
+- backend/app/Http/Middleware/RequireStaffPasswordConfirmation.php.
+- backend/app/Http/Requests/Staff/ReplaceStaffRolesRequest.php.
+- backend/app/Http/Requests/Staff/ActivateStaffRequest.php.
+- backend/app/Http/Requests/Staff/DeactivateStaffRequest.php.
+- backend/resources/js/types/staff.ts.
+- backend/resources/js/pages/staff/Index.vue and Show.vue.
 
-## Actual checks
+Modified backend/routes/web.php, backend/bootstrap/app.php,
+backend/app/Http/Middleware/HandleInertiaRequests.php,
+backend/resources/js/types/auth.ts, backend/resources/js/components/AppSidebar.vue.
+No schema/test/dependency changes. Assistant changed AGENTS and five docs only.
 
-Developer-executed, not assistant execution:
+## Actual checks and manual evidence
 
-- Initial Pint failures corrected; final 62 files PASS.
-- Initial PHPStan candidate-type errors corrected by instanceof User guard;
-  final analysis 47 files, no errors with --memory-limit=512M.
-- Frontend types passed; vp check 66 formatted / 60 linted, no warnings/errors.
-- Build passed, 3574 modules, 20.45 seconds. Optional fontaine warning remains.
-- Artisan help confirmed command discovery. No separate php -l run.
-- Effective DB/role verified, only audit migration pending, additive migrate DONE.
-- Bootstrap success reported for existing account; repeat refused before prompts.
-- Promoted account login/dashboard, read-only email, absent self-delete,
-  GET /register 404 all confirmed manually.
-- Success audit count 1 after refusal: console/null actor, subject 1, promoted,
-  administrator assigned, activation false to true. Raw Tinker JSON representation
-  does not establish array-cast runtime behavior. Split-line query parse error
-  corrected with single-line query; no data mutation from error.
+Developer execution, not new assistant execution:
 
-No automated tests executed. Historical Task 03 40 tests/138 assertions are not
-Task 07 results. phpunit.xml still forces testing/SQLite :memory:/empty DB_URL;
-tests/TestCase.php unchanged. Runtime isolation remains unverified.
-No dedicated PostgreSQL automated integration suite.
+- Full Pint 69 passed at backend checkpoint; subsequent changed middleware/bootstrap
+  targeted formatting passed. Latest bootstrap check 1 file PASS.
+- PHPStan initially caught Gate/timestamp errors; corrected. Latest54 files/no
+  errors at 512 MiB after final handler. No separate php -l.
+- Frontend check:fix/build/types all reported passed, no supplied counts/timings.
+- route:list showed five staff routes and expected middleware.
+- Primary admin directory/details/sidebar/self-hidden controls passed.
+- Activation first stopped for password confirmation, returned without mutation;
+  second submission activated Dispatcher fixture.
+- Dispatcher/Technician dashboard/login, hidden staff nav and direct-read403 passed
+  (Dispatcher directory/details, Technician directory checked).
+- Role replacement revoked private session; deactivation retained roles/reason,
+  revoked session and rejected correct fresh login.
+- First three audit rows correct actor 1/subject 2/timestamps/array metadata; primary
+  roles unchanged. Reactivation Administrator+Technician, cleared metadata and
+  fixture admin access/self-hidden controls passed.
+- Direct action self-role/state denials, empty/duplicate/unknown roles and reverse-
+  order no-op with unchanged audit count passed. Not HTTP payload coverage.
+- Tinker-held shared lock blocked separate browser write; rollback release allowed
+  retry. Repeated check verified inline conflict/preserved input/unchanged saved
+  state, lock released. Limited two-connection contention, not exhaustive racing.
+- Final fixture inactive/deactivation metadata verified; primary remains usable.
 
-## Deferred checks and security limits
+## Approved remaining gaps
 
-Not verified in Task 07: inactive/roleless or guest/JSON denial, POST registration,
-privileged/changed-email input rejection, password recovery, remember-me,
-2FA/passkeys, eligible unverified flows, new-account bootstrap, notification
-failure, noninteractive/collision/deactivated-account refusal, audit failure
-rollback, simultaneous bootstrap. Application security logs not inspected.
-Sequential refusal does not prove concurrency; reviewed transaction does not
-prove rollback behavior under injected failure. User approved these limitations.
-SQLite cannot prove PostgreSQL SQL/locking/concurrency. Agree test scope first.
-
-Full staff management/policies, self-change/last-admin concurrency protection,
-session/remember-me/token revocation, invitations, controlled recovery, audit
-retention/access and tamper resistance remain future work. No production-ready
-security claim. Optional fontaine/React peer, default PHPStan 128 MiB, HMR-editing/
-production SSR, nested CI, Linux dependency/Horizon/Reverb/Expo limits remain.
+No automated tests/new tests/SQLite runtime isolation. phpunit.xml forced testing/
+SQLite :memory:/empty DB_URL; TestCase unchanged. Old starter tests/factory assume
+old access/email/deletion rules; registration suite skips instead of checking
+closure. Do not blindly run. PostgreSQL-only/nonnested action needs explicit future
+test strategy; SQLite cannot prove locking/concurrency. No PostgreSQL suite.
+Unverified last-admin failure branch, injected audit/write rollback, exhaustive
+concurrent mutations, remember-me cookie behavior, in-flight/session races,
+HTTP unauthorized mutations/privileged payloads, JSON confirmation/conflicts,
+multi-page pagination, inherited 2FA/passkey/recovery/unverified/active-roleless/
+inactive-admin cases. Source review not executed evidence. User approved gaps.
+No production-ready/immediate cancellation claim. Invitations/controlled recovery/
+audit browsing/retention/tamper resistance/email-change safety remain future.
+Optional fontaine/React peer, default PHPStan 128 MiB, HMR-edit/production SSR,
+root CI/Linux dependency setup limits remain.
 
 ## Next recommended task
 
-Task 08 — Staff administration, last-Administrator safeguards and revocation.
-Recover state and agree exact permissions, mutation invariants, concurrent-change
-strategy, revocation behavior, audit events/UI and verification scope first.
-Keep Task 05 role matrix, no self role/state changes and no global admin bypass.
-Invitations remain Task 09; broad coverage/controlled recovery Task 10.
-Task 07 unverified security paths remain explicit follow-ups, not passed tests.
+Task 09 invitation-only staff provisioning/atomic acceptance per Task 05. Agree
+normalized fixed email, explicit roles, 48-hour hashed single-use tokens, resend/
+revoke invalidation, inviter authority recheck and atomic account/role/audit writes.
+Existing accounts separate, no silent reset/reactivation. Coordinate protected
+writes with shared lock; agree notifications/testing. Task 10 coverage/console
+recovery. Keep Redis PHP client, queues/workers, cross-platform Horizon and Reverb
+infrastructure visible; none installed/configured here. Sanctum/Expo/mobile later.

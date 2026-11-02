@@ -17,8 +17,10 @@ Task 05 authorization design is approved. Task 06 implemented role and activatio
 persistence, approved on 2026-11-02 with database-backed tests deferred.
 Task 07 controlled staff access, closed public registration/self-deletion and
 first-Administrator bootstrap with audit are implemented. Results and verification
-limitations were approved on 2026-11-02. General staff administration, invitations
-and operational modules remain future work.
+limitations were approved on 2026-11-02. Task 08 existing-account administration,
+protected role/state changes, audit and supported browser revocation are implemented;
+manual results and gaps approved on 2026-11-02. Invitations and operational modules
+remain future work.
 Business scope is unchanged.
 
 ## Purpose

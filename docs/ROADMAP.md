@@ -11,7 +11,7 @@ were approved on 2026-11-01. Task 04 PostgreSQL development and authentication
 smoke verification are complete; automated tests were skipped by user request.
 Task 04 results and that testing exception were approved on 2026-11-01.
 
-Tasks 01–07 are complete and approved; see the latest progress section below.
+Tasks 01–08 are complete and approved; see the latest progress section below.
 Business scope, architecture, and engineering conventions are approved.
 
 The Laravel/Vue starter application exists in backend/; no business modules exist.
@@ -374,7 +374,7 @@ bootstrap/existing-account handling, verification access, and test expectations.
 Do not begin audit-dependent privileged workflows without their required audit
 foundation. No Redis/queue/Reverb/Expo or domain features are implicitly authorized.
 
-## Current progress after Task 07 — 2026-11-02
+## Historical checkpoint after Task 07 — 2026-11-02
 
 Tasks 01–07 complete with user approval. Task 07 implemented baseline staff
 admission, closed public registration/self-deletion, name-only profile updates,
@@ -393,3 +393,28 @@ for privileged changes. Agree exact scope and verification before coding.
 Keep profile email changes blocked until safety rules exist. Invitations remain
 Task 09; broader authorization coverage and controlled recovery Task 10.
 Deferred Task 07 checks require agreed scope; no infrastructure implicitly authorized.
+
+## Current progress after Task 08 — 2026-11-02
+
+Tasks 01–08 complete with user approval. Task 08 delivered staff directory/details,
+admin policy, no self changes, validated roles/state, PostgreSQL shared locking/
+last-usable-admin invariant, transactional audit, supported browser revocation,
+password confirmation and inline Inertia conflicts. No migration/dependency/tests.
+User selected manual-only verification. Selected browser/direct action/audit and
+lock-contention checks passed. PHP/frontend quality passed. Forced rollback,
+last-admin failure branch, remember-me/races, HTTP privileged payloads, pagination,
+isolation and exhaustive concurrency deferred. Source review is not execution.
+Fixture 2 retained inactive; primary 1 active verified Administrator.
+
+Next Task 09: invitation-only provisioning per Task 05: normalized fixed email,
+explicit roles, 48-hour hashed single-use token, resend/revoke invalidation,
+rechecked inviter authority and atomic acceptance/account/role/audit. Existing
+accounts separate; no silent reset/reactivation. Shared lock (71001, 1) for protected
+state writes. Agree scope, notification delivery and verification first.
+Task 10 coverage/controlled recovery remain. Keep profile email changes blocked
+until separate safety flow designed. Existing gaps remain explicit follow-ups.
+
+Redis PHP client, queues/workers, Horizon cross-platform dependencies and Reverb
+integration remain planned infrastructure; none installed/configured in Task 08.
+Initial notifications may send synchronously after commit. Sanctum/mobile/Expo
+and root CI future; no infrastructure install authorization implied.

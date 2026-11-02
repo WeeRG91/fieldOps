@@ -788,3 +788,126 @@ staged DeleteUser deletion. project-commands.txt remains untracked local notes.
 Assistant did not stage/commit/push. Next recommended Task 08: agree staff
 administration, last-admin concurrency, revocation and audit scope before coding.
 No application checks rerun during documentation editing.
+
+## Task 08 — Staff administration, last-admin protection and revocation
+
+### Status and approval
+
+Completed 2026-11-02. User explicitly chose manual verification only, approved
+results and listed gaps, then authorized all six continuity updates. Developer
+wrote code/ran commands; assistant inspected read-only and edited documentation
+with permission. No migration, dependency, test files or separate php -l command.
+No automated tests/isolation verification. Historical results not relabeled.
+
+### Recovery and implementation decisions
+
+Six docs and actual identity/auth/schema/session/test/UI/Git inspected. Task 07
+merged to main at 9f06938, feature branch removed; older handover Git snapshot stale.
+Developer created feat/staff-administration. At closeout latest commit 9f06938;
+Task 08 staged/unstaged/untracked (action/new Vue/types have mixed AM snapshots),
+project-commands.txt untracked. No assistant staging/commit/push.
+UserPolicy: active verified admin views all accounts/manages others; no self role/
+state changes, admin bypass, hard delete or identity editing. Full nonempty
+role selection; inactive roles retained, reactivation explicitly reviews roles.
+Deactivation needs trimmed reason <=1000; activation leaves verification unchanged.
+ManageStaffAccess: top-level PostgreSQL READ COMMITTED, shared try-advisory lock
+(71001, 1), deterministic actor/subject row locks, fresh policy check, mutation/
+revocation/audit, final usable-admin check. Reject nested transactions and SQLite.
+Future protected writes must cooperate; direct SQL/helpers bypass safeguards.
+Database sessions on SAME connection required; actual changes rotate remember_token
+and delete stored sessions. No-op role sets do not audit/revoke. In-flight/session
+rewrite races not solved; no token/WebSocket infrastructure.
+Three authorized Form Requests, thin controller/selected responses, pagination 20,
+batched role query. Five auth/staff/verified model-bound routes; confirmation
+middleware authorizes before Fortify timestamp. Expired browser writes return
+through confirmation to GET details, require resubmission. JSON 423 branch untested.
+Inertia conflicts redirect 303 with session form errors, other clients normal 409
+by source. Typed directory/details/forms, confirmations/errors and server-capability
+sidebar. No creation/invitation/audit-management interface.
+
+### Files created by developer
+
+- backend/app/Policies/UserPolicy.php.
+- backend/app/Actions/Staff/ManageStaffAccess.php.
+- backend/app/Http/Controllers/Staff/StaffController.php.
+- backend/app/Http/Middleware/RequireStaffPasswordConfirmation.php.
+- backend/app/Http/Requests/Staff/ReplaceStaffRolesRequest.php.
+- backend/app/Http/Requests/Staff/ActivateStaffRequest.php.
+- backend/app/Http/Requests/Staff/DeactivateStaffRequest.php.
+- backend/resources/js/types/staff.ts.
+- backend/resources/js/pages/staff/Index.vue and Show.vue.
+
+Modified backend/routes/web.php, backend/bootstrap/app.php,
+backend/app/Http/Middleware/HandleInertiaRequests.php,
+backend/resources/js/types/auth.ts, backend/resources/js/components/AppSidebar.vue.
+Wayfinder generated (--with-form --skip-database) and assets built. No new business
+source claimed from generated output. Assistant updated AGENTS and five docs only.
+
+### Actual quality checks
+
+Developer-executed evidence:
+
+- Full Pint 64/PHPStan 49 no errors after action checkpoint.
+- Later full Pint 69 passed. PHPStan initially found middleware concrete Gate
+  static call/magic timestamp arithmetic; facade/getTimestamp corrected.
+- PHPStan 54 no errors at 512 MiB after fixes and again after final conflict handler.
+  Later changed PHP files targeted Pint passed; final bootstrap 1 file PASS.
+  No redundant final full Pint or separate syntax run claimed.
+- route:list --path=staff -v displayed all five routes/expected middleware.
+- Frontend check:fix, build, types:check reported all passed; counts/timings not
+  supplied. No later Vue change after manual verification began.
+- Review caught missing self/nested guards, undefined connection, actor-vs-subject
+  role target, missing method/import, confirmation fall-through/Gate and distinct
+  typo before verification. Explicit ID-to-role array resolved IDE inference issue.
+  role=alert retained as valid accessibility markup.
+
+### Actual manual evidence
+
+- Tinker target fieldops_dev/fieldops_app confirmed; fixture email absent.
+- Hidden prompt with visible fallback disabled created Manual Staff, user 2,
+  fieldops.manual@example.test: inactive/roleless, manually verified solely for
+  fixture. Primary account not modified; password not documented.
+- Primary admin navigation/directory/details and self-hidden controls passed.
+- First Dispatcher activation required password confirmation; returned without
+  activation, second submission activated successfully.
+- Dispatcher login/dashboard passed; Staff hidden; direct /staff and /staff/1 403.
+- Dispatcher -> Technician role replacement passed, private-session refresh
+  redirected to login; fresh dashboard access passed and /staff remained 403.
+- Deactivation retained Technician/reason; revoked session; fresh correct login
+  rejected.
+- First three mutation audit rows independently inspected via toArray: activated,
+  roles_replaced, deactivated, actor_type user/actor 1/subject 2, expected timestamps,
+  array before/after roles/state/grants/revocations/reason. Primary roles unchanged.
+- Reactivation with Administrator+Technician passed, current deactivation fields
+  cleared; fixture staff access/self-hidden controls/multiple roles passed.
+- Direct Tinker action: self-role/self-deactivation authorization denied; empty,
+  duplicate, unknown roles validation rejected; unchanged reverse-order roles added
+  no audit (comparison true). Not HTTP payload coverage or automated feature tests.
+- Tinker-held advisory lock blocked separate browser mutation; rollback released
+  lock, retry to Dispatcher succeeded. Initial debug popup prompted UX refinement.
+- Repeated held-lock check after handler: inline error, input preserved, saved state
+  unchanged, lock released. No retry requested afterward. Real cross-connection
+  contention, not two complete simultaneous staff mutations or exhaustive races.
+- Cleanup deactivated fixture via UI. Final SQL: user 2 inactive, deactivated_by=1,
+  timestamp present, reason 'Task 08 manual verification complete'; primary 1 active,
+  verified, administrator. Fixture/history retained. User Hidden fields disappeared
+  from toArray by design; query builder verified metadata without changing model.
+  Later audit rows after initial three not separately inspected/count-reconciled.
+
+### Approved gaps and next task
+
+No automated tests/new tests/SQLite runtime isolation. Starter tests/factory still
+assume old access/email/deletion rules; registration suite skips instead of proving
+closed registration. Do not blindly run. PostgreSQL-only/nonnested action requires
+future test strategy; SQLite cannot prove locking. No PostgreSQL automated suite.
+Final last-admin failure, forced write/audit rollback, remember-me cookies,
+in-flight/session races, HTTP unauthorized mutations/privileged payloads, JSON
+branches, multi-page pagination and exhaustive concurrency unverified. Older auth
+flows (2FA/passkeys/recovery/unverified/active-roleless/inactive-admin) not fully
+covered. User approved these limitations; source review is not execution evidence.
+No Sanctum/Reverb to revoke; no invitation/recovery/audit UI, retention/tamper
+resistance or email-change safety workflow. Prior runtime/infrastructure limits
+remain. Next Task 09 invitation-only provisioning/atomic acceptance per Task 05,
+shared lock, token lifecycle, audit, explicit notification/testing scope.
+Redis/queues/Horizon/Reverb visible deferred infrastructure, no install implied.
+Documentation closeout uses source/user outputs; no app checks rerun by assistant.

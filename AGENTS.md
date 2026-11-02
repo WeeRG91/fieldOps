@@ -253,6 +253,52 @@ Test isolation remains unverified; user approved these limitations. Agree future
 test scope before execution. Reuse verified results instead of repeating checks.
 
 Git now has commits and origin https://github.com/WeeRG91/fieldOps.git.
-Branch feat/staff-access-bootstrap tracks its origin branch. Staged/unstaged
-changes remain; do not stage, commit or reset automatically. Recommended next:
-Task 08 staff administration, last-admin safeguards, revocation and audit.
+Task 07 was subsequently committed/merged to main at 9f06938; its feature branch
+was removed. See Task 08 below for current state. Do not stage/commit/reset automatically.
+
+## Task 08 implemented staff administration — 2026-11-02
+
+Complete with user approval of results/gaps and explicit six-file documentation
+closeout authorization. User chose MANUAL VERIFICATION ONLY. No automated tests,
+new tests, isolation check, migrations or dependencies. No separate php -l run.
+
+UserPolicy permits active verified Administrators to view all existing accounts,
+including inactive/roleless users, and manage others. All self role/state changes
+denied; no global admin bypass, identity editing, deletion or public creation.
+ManageStaffAccess owns top-level PostgreSQL READ COMMITTED transaction, shares
+try-advisory lock (71001, 1) with bootstrap, locks actor/subject by ascending ID,
+reloads policy authority, mutates/revokes/audits and checks active verified admin
+remains. Reject nesting/other databases. SQLite cannot execute it unchanged.
+Future invitation/recovery writes must share protocol. Direct SQL/internal role
+helpers bypass it. No-op role sets do not audit/revoke. Reactivation explicitly
+selects roles/clears current metadata; deactivation reason <=1000, retains roles.
+
+Actual changes rotate remember_token/delete database sessions on SAME connection;
+unsupported session configuration throws/rolls back. Running requests/session
+rewrite races not solved. No Sanctum/Reverb infrastructure. Password confirmation
+middleware authorizes before Fortify timestamp check; expired browser writes
+return through confirmation to GET details, requiring resubmission. Inertia staff
+lock conflicts redirect 303 with inline form errors; normal 409 for other clients
+by implementation. No audit UI/retention/tamper-resistance system.
+
+Passed manually: admin directory/details; Dispatcher/Technician read denials and
+hidden link; role changes/session logout; deactivation/fresh-login rejection;
+reactivation/multiple roles/admin fixture access; self-change action denial;
+invalid/duplicate/empty roles; no-op audit count. First three mutation audits
+inspected, array cast verified. Tinker-held lock blocked separate browser mutation;
+release allowed retry. Inline conflict preserved selection/saved state. This is
+limited lock-contention evidence, not exhaustive concurrent staff mutations.
+
+Primary user 1 active/verified/Administrator. Fixture user 2,
+fieldops.manual@example.test, retained INACTIVE, deactivated_by=1 with reason
+'Task 08 manual verification complete'; history retained. Last confirmed roles
+Dispatcher. Hidden metadata verified through console query builder.
+Unverified: final last-admin failure branch, forced rollback, remember-me cookies,
+in-flight races, HTTP privileged payloads, multi-page pagination and inherited
+auth gaps. Latest PHPStan 54/no errors at 512 MiB; full Pint checkpoint 69 passed,
+later changed PHP files targeted Pint passed. Frontend format/lint/build/types
+passed by developer report, no counts supplied.
+
+Current feat/staff-administration, latest commit 9f06938, staged/unstaged/untracked
+Task 08 work; no assistant Git mutation. Next Task 09 invitation-only provisioning
+and atomic acceptance/audit per Task 05, honoring shared lock and explicit scope.
