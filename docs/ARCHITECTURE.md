@@ -12,6 +12,10 @@ invitation-only provisioning is implemented and approved on 2026-11-04 with
 manual-only verification and explicit gaps. Operational resource authorization,
 controlled recovery and broader revocation remain deferred.
 Database-backed tests and runtime-isolation verification were explicitly deferred.
+Task 10 stabilization review, SMTP failure/recovery and final quality checks are
+performed; architecture assessment and Task 11 direction approved. Documentation
+closeout authorized; final Task 10 completion approved on 2026-11-04. No new features.
+Staff foundation closure with gaps approved; roadmap Milestone 2 remains open.
 Historical task sections describe their respective checkpoints.
 
 ## Architectural approach
@@ -1157,3 +1161,85 @@ changes, concurrency/rollback and broader cases. Administrator-grant branch,
 signed-in denial, limits/JSON, time boundary, post-issue account collision,
 re-invitation branches, complete audit/log secret inspection remain unverified.
 Do not claim production readiness or resolution of Task 08 gaps.
+
+## Task 10 — Staff security stabilization, 2026-11-04
+
+### Scope, approval and milestone interpretation
+
+Read-only stabilization of existing staff identity, authorization, administration
+and invitations; no new application feature, dependency, migration or recovery
+command. User approved the architecture assessment and Task 11 direction.
+Documentation closeout and final Task 10 completion approved on 2026-11-04.
+
+The staff identity and access foundation is complete with documented verification
+gaps. The existing roadmap's Milestone 2 remains OPEN: its complete service
+workflow and mobile execution are not implemented. Do not renumber or claim that
+milestone complete merely because the staff foundation is ready.
+The old Task 10 console-recovery implementation recommendation is superseded
+by this approved stabilization scope. Controlled recovery remains deferred.
+
+### Review findings and boundaries
+
+Reviewed routes, middleware, policies, requests, controllers, identity models,
+shared actions, invitation schema, audit and installed transaction behavior.
+No confirmed authorization or data-integrity defect identified in reviewed paths.
+This is a bounded source-review finding, not a production-security certification.
+
+Fixed explicit roles/no global admin bypass; active/verified admission; no self
+role/state changes; protected profile; first-admin bootstrap; staff administration;
+shared PostgreSQL lock; last-usable-admin check; browser revocation; transactional
+success audit; fixed-recipient/role invitation acceptance remain the architecture.
+Recent-password enforcement is at privileged web entry points; shared actions
+independently reauthorize fresh actors under their transaction lock.
+
+Inviter eligibility is checked at acceptance time. Losing eligibility prevents
+acceptance while that state persists, but does not permanently cancel invitations.
+Restoring eligibility may make an otherwise valid unexpired invitation usable.
+An acceptance committed before later inviter deactivation is not undone.
+
+User/role/activation/consumption/audit writes use one application transaction.
+A thrown callback exception triggers framework rollback. Overlapping cooperating
+mutations use the shared advisory try-lock; busy callers receive a conflict,
+and later acceptance retries recheck consumption. Neither source review nor
+sequential replay proves simultaneous acceptance or forced audit/write rollback.
+Direct SQL/internal helpers bypass cooperation. In-flight session rewrite races
+and database-owner audit tampering remain limitations. Profile email edits blocked.
+
+### Delivery failure verification
+
+Task 10 manually verified SMTP refusal with MailDev stopped: warning toast,
+pending invitation retained. Restarting MailDev and Resend produced replaced old
+record, pending replacement and captured email, confirmed by developer.
+No invitation acceptance was performed for this fixture.
+SMTP/database are not atomic; ambiguous send results do not establish delivery.
+Crash-after-commit recovery and background retries belong to later queue design;
+no outbox or worker framework introduced here.
+
+### Final verification and remaining gaps
+
+Final changed-PHP syntax, full Pint, PHPStan 512 MiB, Vue/TypeScript, formatting/lint
+and production build passed; exact counts/results in TASK_LOG.
+Admin Staff/Invitations access and roughly 375 px invitation-list usability checked.
+Acceptance-page narrow-screen layout not rechecked; no code change needed.
+Duplicate-error removal is present in source; triggering its final browser display
+was not independently rechecked. Final static/build checks now cover that cleanup.
+
+No automated tests/new tests/test-runtime isolation check.
+Unauthorized-write console checks were explicitly skipped before execution.
+Profile/acceptance privilege injection, inviter changes, concurrent acceptance and
+forced rollback remain unverified. Earlier GET403/manual lifecycle/revocation
+results remain historical, not new mutation tests. PostgreSQL-only actions and
+schema cannot be executed unchanged on SQLite; no dedicated PostgreSQL suite.
+Other Task 09/08 auth, JSON, rate-limit, remember-me and audit-inspection gaps persist.
+
+### Next business increment
+
+Approved direction: Task 11 minimal customer organizations with Dispatcher-authorized
+creation/list/details. No automatic Administrator operational privilege.
+Customer contacts then customer-owned service sites follow; equipment/site
+association remains in the later equipment-register scope. Define exact schema,
+ownership, policies and acceptance criteria at each task start.
+Agree feature-specific verification; prior manual-only exceptions are not permanent
+policy. Prove effective isolation before database-backed automated tests.
+Redis/queues/Horizon/Reverb, API/mobile, Scheduler as needed and deployment stay
+visible future work, not installations authorized by this review.

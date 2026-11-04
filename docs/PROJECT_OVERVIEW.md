@@ -22,6 +22,8 @@ protected role/state changes, audit and supported browser revocation are impleme
 manual results and gaps approved on 2026-11-02. Task 09 invitation-only provisioning
 is implemented; manual results/gaps and closeout approved on 2026-11-04. Operational
 modules remain future work.
+Task 10 stabilization review/checks are performed; assessment and Task 11 customer
+organization direction approved. Final Task 10 completion approved on 2026-11-04. Staff foundation closure with gaps approved; Milestone 2 remains open.
 Business scope is unchanged.
 
 ## Purpose
@@ -268,3 +270,22 @@ concurrency safeguards are implemented but not verified by forced failure or
 simultaneous acceptance. No automated Task 09 tests; approved gaps are in TASK_LOG
 and handover. Task 09 changes identity onboarding, not the operational MVP scope.
 Customers/sites/work orders/API/mobile and real-time operations remain future.
+
+## Staff foundation stabilization — Task 10, 2026-11-04
+
+User approved the staff identity/access foundation assessment and next direction
+with explicit verification gaps. Task 10 reviews/checks are performed; documentation
+and final completion approved on 2026-11-04. No business feature added.
+
+No confirmed defect found in the reviewed staff paths; source review is not proof
+of production security. Admin narrow-screen invitation listing and local SMTP
+failure/recovery checked; final PHP/frontend static/build checks passed.
+No automated tests/isolation run; manipulated HTTP payloads, inviter changes and
+concurrency/rollback remain unverified. Exact evidence is in TASK_LOG/handover.
+
+The foundation can support starting customer-domain development. Milestone 2 stays
+open until its full service workflow and mobile execution are delivered.
+Approved next Task 11 direction is minimal Dispatcher-managed customer organizations,
+then customer contacts/customer-owned sites; equipment remains later.
+Controlled console recovery remains deferred, not part of this stabilization.
+Business scope and explicit-role permission model are unchanged.

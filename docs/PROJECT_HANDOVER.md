@@ -2,12 +2,12 @@
 
 ## Current milestone and task
 
-Identity/access foundation. Tasks 01–09 complete with user approval.
-Task 09 invitation-only provisioning was implemented by the developer.
-On 2026-11-04 the user approved manual-only closeout with the stated gaps and
-authorized continuity updates. TASK_LOG.md preserves historical evidence.
-Next: Task 10 authorization coverage and controlled console recovery; agree its
-scope and verification approach before implementation.
+Tasks 01–10 complete. Task 10 staff security stabilization reviewed and approved;
+final checks performed and Task 11 direction approved. User authorized
+all continuity updates on 2026-11-04. Final Task 10 completion approved on 2026-11-04.
+Staff identity/access foundation closure with gaps approved; original Milestone 2
+remains OPEN for complete service workflow/mobile. Controlled recovery deferred.
+Next Task 11 direction: minimal customer organizations, exact scope to agree.
 
 ## Collaboration and verification boundary
 
@@ -31,10 +31,11 @@ Vite+1.4.0; WSL PHP8.5.4/Redis8.10.1. Existing MailDev2.2.1 used.
 
 Origin https://github.com/WeeRG91/fieldOps.git. Task 08 committed at edc9cc9
 (feat: add staff administration with safeguards and access revocation).
-Current feat/staff-invitations tracks origin/feat/staff-invitations.
-Task 09 staged/unstaged/untracked; several AM entries contain older staged
-scaffolds plus fuller working versions. Do not commit partial index as-is.
-project-commands.txt untracked local notes. No Task 09 commit/merge claimed.
+Task 09 committed/merged by user at 33bbb48. Current main equals cached origin/main;
+feature branch absent locally/tracking, no fresh live remote verification claimed.
+Older staged scaffolds reconciled; no staged/unstaged application differences.
+Task 10 changes only these six continuity docs, unstaged; project-commands.txt
+remains untracked local notes. No Task 10 staging/commit/merge performed.
 Earlier Git snapshots are historical.
 
 ## Database, mail and retained fixtures
@@ -161,7 +162,7 @@ Shared lib/date.ts formatUtc(en-GB, UTC), both invitation pages and staff detail
 controllers convert response dates to UTC. No data migration. Human-readable
 display not independently reported; duplicate email error display removed last.
 
-## Files created or modified
+## Task 09 files created or modified — historical inventory
 
 Created in backend/:
 - app/Models/StaffInvitation.php; app/Policies/StaffInvitationPolicy.php.
@@ -187,7 +188,7 @@ Additional UTC reuse: app/Http/Controllers/Staff/StaffController.php and
 resources/js/pages/staff/Show.vue. Wayfinder/assets generated; no new dependencies.
 Assistant updated AGENTS and five continuity docs only with user authorization.
 
-## Actual verification and approved gaps
+## Task 09 verification — historical evidence (Task 10 updates below)
 
 Developer execution, not new assistant test runs:
 - Three migrations syntax/Pint passed; applied with reported DONE results.
@@ -223,9 +224,67 @@ No runtime password-hash or absence-of-plaintext storage/log audit claimed.
 Task 08 last-admin failure/remember-me/session-races and inherited auth gaps persist.
 Legacy tests/factory assumptions still need revision before blind execution.
 
+
+## Task 10 current verification and approval status — 2026-11-04
+
+Reviews and approved checks performed; architecture/foundation assessment and
+Task 11 direction approved. Six-file continuity closeout authorized; final
+Task 10 completion approved on 2026-11-04. No application/dependency/schema/
+recovery implementation changes, staging, commits or merges in Task 10.
+
+Developer verified Admin Staff/Invitations access and narrow (approximately 375 px) invitation
+listing usability. No corrective UI change needed. Acceptance narrow layout and
+final duplicate-error browser trigger not repeated; source confirms cleanup.
+
+Read-only authorization/failure review found no confirmed defect in inspected
+paths. Existing admission/policies/input selection/recent-password/fresh locked
+authority/lifecycle/last-admin/audit mechanisms are present. This is not proof of
+every runtime denial, concurrent interleaving or forced failure.
+Inviter eligibility is checked at acceptance; restoration can make a valid
+unexpired invitation usable again. It is not permanent invitation cancellation.
+
+Manual SMTP target rechecked: fieldops_dev/fieldops_app,127.0.0.1:1025.
+With MailDev stopped, Admin issued Technician invitation to
+fieldops.smtp-failure@example.test; warning toast/pending retention verified.
+Restart MailDev and Resend: old replaced/new pending/replacement email captured,
+collectively confirmed. Retain fixture/history, no acceptance. Exact IDs/user
+absence/audit rows/logs not independently queried. MailDev restarted.
+No external delivery, ambiguous send or process-crash recovery proof.
+SMTP failure is no longer wholly unverified, but resend transport failure itself
+and other failure modes remain untested.
+
+Final commands executed by developer:
+- PHP syntax 25 changed Task 09 files, all no errors.
+- Pint 89 PASS.
+- PHPStan 74/no errors at 512 MiB.
+- Vue/TypeScript passed.
+- Formatting 73/lint 67 passed without warnings/errors.
+- Production build 3,587 modules, 2.94s passed; optional fontaine notice unchanged.
+These supersede earlier late-cleanup syntax/static/build gaps.
+No automated tests/new tests/test-runtime isolation run.
+
+User skipped unauthorized console writes before execution. Profile and acceptance
+payload checks also deferred; earlier GET403 is not POST denial evidence.
+Inviter changes, concurrent acceptance/lock contention, forced account/audit
+rollback remain unverified. Other Task 09/08 limitations below persist.
+Current branch main at 33bbb48 equals cached origin/main; Task 09 merged and its
+feature branch absent locally/tracking. No live GitHub refresh claimed.
+Before docs, index/tracked tree clean; now only six continuity docs modified,
+unstaged, plus existing untracked project-commands.txt. No Task 10 commit needed
+without authorization. Do not discard or stage notes automatically.
+
+Staff identity/access foundation closure with gaps approved; roadmap Milestone 2
+remains OPEN (full service workflow/mobile absent). Controlled console recovery
+remains deferred separately, superseding old Task 10 implementation recommendation.
+
 ## Next recommended task
 
-Task 10 authorization coverage and controlled console recovery. Recover docs/Git;
-agree scope/testing, preserve shared lock/last-usable-admin/explicit roles/audit.
-No public recovery or self-escalation. Redis client/queues/workers/Horizon/Reverb
-remain deferred, as do Sanctum/Expo/mobile/operational domains/CI.
+Task 10 is approved complete. Recover docs/Git and agree Task 11 minimal
+customer organizations: Dispatcher-authorized create/list/details. Exact fields,
+status/uniqueness/ownership/validation and per-feature verification to agree before
+implementation. No automatic Admin operational access. Contacts/customer-owned
+sites follow; equipment later. Earlier manual-only exceptions are not permanent;
+prove runtime isolation before any approved DB tests. No dedicated PostgreSQL suite.
+Controlled console recovery remains separate deferred work. Redis client/queues/
+workers/Horizon/Reverb, API/Sanctum/Expo/mobile, operational workflow and CI/deployment
+remain visible future work, not implicitly authorized implementations.

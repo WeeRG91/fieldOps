@@ -1062,3 +1062,127 @@ Task 08 last-admin/remember-me/session races/inherited auth gaps persist.
 Task 10 recommended: agreed authorization coverage/controlled console recovery,
 shared lock+usable-admin safety+transactional audit, no public recovery/self bypass.
 Redis client/queues/Horizon/Reverb/Sanctum/Expo/mobile/business modules/CI deferred.
+
+## Task 10 — Staff security stabilization, 2026-11-04
+
+### Status, scope and approval
+
+Reviews and approved verification performed; user approved architecture assessment,
+foundation closure with documented gaps, and Task 11 direction. User explicitly
+authorized all six continuity updates. Final Task 10 completion approved by user on 2026-11-04.
+Task 10 is stabilization, superseding the older recovery implementation proposal.
+No application code/config edits, dependency installs, migrations, automated tests,
+new test files or assistant Git writes. No controlled recovery feature added.
+
+### Recovery, Git and staging
+
+Six continuity documents, repository/branches/HEAD/index/working tree/ignore rules
+and relevant source/configuration inspected read-only.
+New brief/handover described precommit Task 09 feat/staff-invitations and older
+staged versions; actual state main at 33bbb48 (feat: add invitation-only staff
+provisioning), matching cached origin/main. Old branch absent locally/tracking.
+Task 09 was committed/merged by user; no live remote refresh performed in Task 10.
+HEAD/index/tracked working tree matched; partial staged scaffolds no longer present.
+Only project-commands.txt untracked. Local .env/dependencies/build/hot ignored and
+not tracked; safe .env.example tracked. No blanket secret-audit claim.
+After final build, same clean tracked state and whitespace checks passed.
+No staging reconciliation necessary. Documentation closeout now modifies six
+continuity files only; no Task 10 commit/merge/staging. Keep local notes.
+
+### UI and security reviews
+
+Source reviewed admin creation/history/resend/revoke/confirmation/error/processing/
+pagination/navigation, public preview/acceptance/loading/errors, shared date helper,
+auth layout/password input/toast/types. Final duplicate email error removed.
+No confirmed corrective issue identified; no code edits proposed.
+Developer verified Administrator Staff/Invitations access and narrow (approximately 375 px)
+invitation-list usability. Acceptance narrow layout not rechecked.
+Final duplicate-error browser trigger not repeated; static/build coverage now final.
+
+Read-only security review traced routes/middleware/policies/Form Requests/
+controllers/models/actions/schema/audit. Active+verified Admin requirement, no
+global bypass/self role-state writes, recent-password confirmation, fixed stored
+recipient/roles, strong token/hash, duplicate/lifecycle/account checks, shared lock/
+fresh actor/last-usable-admin/audit structure reviewed. No confirmed authorization
+or data-integrity defect in inspected paths; bounded review, not runtime proof.
+Public registration remains disabled/profile name-only/email changes blocked.
+Prior Task 08/09 manual results retained historically, not re-executed.
+
+Failure review: sender called after commit, SMTP exceptions produce warning/
+retained invitation, resend already supersedes old record even if delivery fails.
+Inviter eligibility rechecked at acceptance; restored eligibility may make a still
+valid invitation usable, not permanent revocation. Already committed acceptance
+is not undone by later inviter deactivation.
+Framework installed transaction callback exception rollback and same-connection
+account/roles/state/consume/audit structure reviewed; no failure injected.
+Try-advisory lock serializes cooperating writes; contention conflicts rather than
+automatic wait/retry. Direct SQL bypass, session races and audit-owner tampering
+remain limitations. No new outbox/worker/queue framework.
+
+### Verification scope and actual manual evidence
+
+User approved compact manual-only plan, no automated test run. Then explicitly
+skipped console unauthorized-write checks before executing them after browser
+self-XSS warning. No unauthorized-write status result obtained. Profile and
+acceptance privileged-payload checks also unexecuted/deferred; not inferred from
+earlier GET403. No fixtures or production data for those skipped requests.
+
+SMTP check executed through normal UI:
+- Tinker target fieldops_dev / fieldops_app confirmed; SMTP host127.0.0.1/port1025.
+- Developer stopped MailDev.
+- Admin issued Technician invitation to fieldops.smtp-failure@example.test.
+- Warning toast: invitation saved but email delivery could not be confirmed.
+- Developer confirmed expected pending retention, restart MailDev, resend,
+  old replaced/new pending and captured replacement email collectively.
+- No acceptance requested/performed; retain fixture/history. No exact IDs,
+  independent users count or audit/log inspection claimed. No primary admin
+  role/state mutation or fixture cleanup. MailDev running again per report.
+This is local refusal/recovery evidence, not all SMTP ambiguity/external delivery/
+resend-failure/process-crash scenarios.
+
+### Final developer-executed quality results
+
+Outputs supplied in attachment7c87f4ca-8fc6-4ee3-82bf-d702a887c4ad:
+- git diff --name-only edc9cc9 HEAD -- . filtered *.php from backend/, each
+  herd php -l:25 changed PHP files, all no syntax errors.
+- herd composer run lint:check: Pint 89 files PASS.
+- PHPStan --memory-limit=512M:74/74, no errors.
+- npm.cmd run types:check: vue-tsc --noEmit passed.
+- npm.cmd run check:73 correctly formatted;67 linted, no warnings/errors.
+- npm.cmd run build:3587 modules transformed; successful in 2.94s.
+- Optional fontaine optimized-font-fallback notice remains; no package installed.
+- No automated feature/unit tests or test-runtime database isolation check.
+These final checks cover the committed source including late Task 09 cleanup and
+UTC response changes; prior gaps remain historical, not relabeled results.
+No new application change after these checks; only approved documentation edits.
+
+### Assessment, remaining gaps and next task
+
+User approved: staff identity/access foundation complete with documented gaps,
+ready to start a bounded customer increment. Original Milestone 2 remains OPEN:
+complete service workflow/work orders/mobile not implemented. No renumbering.
+No production-secure/fully-tested claim.
+
+Deferred: automated tests/runtime isolation; HTTP privileged writes/profile and
+acceptance injection; inviter changes; simultaneous acceptance/contention and
+forced write/audit rollback; acceptance narrow layout/final duplicate-error browser
+trigger; Admin invitation, signed-in rejection, limits/JSON, boundary expiry,
+post-issue collision, re-invite branches, multi-page pagination, full secret/log/
+audit inspection and inherited auth/remember-me/session-race/last-admin gaps.
+No dedicated PostgreSQL integration suite; SQLite cannot establish PG-only locking/
+schema behavior. Legacy tests/factory still need agreed revision before execution.
+
+Task 11 direction approved, implementation not started: minimal customer
+organizations with Dispatcher creation/list/details, explicit fields/policies and
+feature-specific verification to agree. Contacts/customer-owned sites follow;
+equipment later per roadmap. Admin alone has no operational privilege.
+Controlled console recovery deferred separately; Redis/queues/Horizon/Reverb/
+Sanctum/API/mobile/Expo/Scheduler-as-needed/CI/deployment remain visible future work.
+
+### Files and closeout
+
+Assistant authorized edits only: AGENTS.md, docs/ARCHITECTURE.md,
+docs/ROADMAP.md, docs/TASK_LOG.md, docs/PROJECT_HANDOVER.md,
+docs/PROJECT_OVERVIEW.md. Historical verification retained.
+Final documentation consistency/whitespace review performed during closeout;
+user subsequently reviewed and approved final Task 10 completion on 2026-11-04.

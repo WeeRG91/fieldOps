@@ -349,3 +349,48 @@ resend fixture replaced/revoked, invitation4 artificially expired (49h-old creat
 48h lifetime; original issuance audit unchanged); validation fixture unaccepted/
 pending at verification. No cleanup requested. Primary1 not role/state modified.
 Task 10 recommended coverage/controlled console recovery; infrastructure still later.
+
+## Task 10 stabilization — current 2026-11-04
+
+Supersedes prior next-task/Git snapshots. New Task 10 brief narrowed scope to
+stabilization, not recovery implementation. Reviews/approved checks performed;
+architecture assessment/Task 11 direction approved, six-file documentation update
+authorized. Final Task 10 completion approved by user on 2026-11-04. No app changes,
+new dependencies/migrations/tests or assistant Git mutations.
+
+Task 09 merged at 33bbb48; main equals cached origin/main, old feature branch gone
+locally/tracking. Prior AM scaffolds reconciled in that commit. No fresh live
+GitHub verification claimed. Before these docs: tracked tree/index clean, only
+project-commands.txt untracked. Now six continuity files changed, unstaged.
+Do not automatically stage/commit. Historical Task 09 partial-index warning is
+not current. Preserve project-commands.txt local notes.
+
+Step2 admin Staff/Invitations access and narrow (approximately 375 px) invitation-list usability
+passed; acceptance narrow layout not rechecked. Source confirms duplicate email
+error removed, but final duplicate-error browser trigger not repeated.
+Read-only security/failure review found no confirmed defect in reviewed paths;
+not proof of all runtime behavior. Inviter eligibility is current-state based;
+restoration can permit valid invitations again, not permanent revocation.
+
+Developer final checks: syntax 25 changedPHP, Pint 89, PHPStan 74 at 512 MiB,
+vue-tsc, format 73/lint 67 no errors, build 3,587 modules/2.94s. Optional fontaine notice.
+These supersede earlier final-cleanup static/build gaps. No automated tests/new
+tests or isolation proof. Unauthorized HTTP console checks explicitly skipped;
+profile/acceptance payload manipulation also unexecuted. Do not claim POST denial
+from previous GET403. Inviter changes/concurrency/forced rollback remain deferred.
+
+SMTP target fieldops_dev/fieldops_app, localhost1025 confirmed. MailDev stopped:
+warning/pending retained; restart/resend old replaced/new pending/local capture
+passed by report. Retain fieldops.smtp-failure@example.test invitation history,
+no acceptance; IDs/user absence/audit rows not independently queried. No fixture
+cleanup or primary admin state change. MailDev restarted per verification.
+Local failure/recovery evidence does not prove external/ambiguous delivery or
+process-crash recovery. No queue/outbox introduced.
+
+User approved foundation closure with gaps; roadmap Milestone 2 remains OPEN
+(full service workflow/mobile absent). Next Task 11 customer organizations minimal
+Dispatcher create/list/details, exact schema/authorization/test scope to agree.
+Contacts/customer-owned sites follow, equipment later. No global Admin bypass.
+Controlled console recovery deferred; do not implement automatically.
+Prior manual-only exceptions are not permanent testing policy. Agree per-feature
+scope/isolation before DB tests. Existing auth/race/audit limitations remain.

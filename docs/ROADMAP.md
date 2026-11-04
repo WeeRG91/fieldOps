@@ -11,7 +11,9 @@ were approved on 2026-11-01. Task 04 PostgreSQL development and authentication
 smoke verification are complete; automated tests were skipped by user request.
 Task 04 results and that testing exception were approved on 2026-11-01.
 
-Tasks 01–09 are complete and approved; see the latest progress section below.
+Tasks 01–10 are complete and approved. Task 10 final completion approved on
+2026-11-04 with documented verification gaps; Task 11 direction approved.
+See the latest progress section below; Milestone 2 remains open.
 Business scope, architecture, and engineering conventions are approved.
 
 The Laravel/Vue starter application exists in backend/; no business modules exist.
@@ -419,7 +421,7 @@ integration remain planned infrastructure; none installed/configured in Task 08.
 Initial notifications may send synchronously after commit. Sanctum/mobile/Expo
 and root CI future; no infrastructure install authorization implied.
 
-## Current progress after Task 09 — 2026-11-04
+## Historical checkpoint after Task 09 — 2026-11-04
 
 Tasks 01–09 complete with user approval and manual-only exceptions recorded.
 Task 09 delivered Administrator invitation issue/history/resend/revoke, fixed
@@ -446,3 +448,51 @@ without assuming authorization for tests or package installs. Preserve closed
 public registration, no self escalation, blocked email changes.
 Redis PHP client/queues/workers/Horizon/Reverb, Sanctum/mobile/Expo, operational
 domain modules and CI remain planned; no installation implied by this closeout.
+
+## Current progress after Task 10 — 2026-11-04
+
+Staff security stabilization reviews and approved checks are performed.
+User approved architecture assessment, foundation closure with explicit gaps and
+Task 11 direction; authorized all continuity updates. Final Task 10 review and
+completion approved on 2026-11-04. No new application code/dependencies/schema.
+
+Task 09 is committed/merged at 33bbb48 on main, replacing old partial-stage snapshot.
+Current main matches cached origin/main; no live remote refresh claimed.
+Before closeout no tracked changes/staging; project-commands.txt untracked.
+These continuity updates are the only new tracked changes, unstaged.
+No Task 10 commit/merge is required or authorized.
+
+Verified this task: Admin page access/narrow invitation-list usability, stopped-
+MailDev warning/pending retention and restart/resend replacement/capture.
+Final syntax 25 PHP/Pint 89/PHPStan 74/types/format 73/lint 67/build 3,587 passed.
+Automated tests/isolation not run; unauthorized console writes skipped.
+Payload manipulation, inviter changes, concurrent acceptance and forced rollback
+deferred, alongside inherited unverified security/authentication branches.
+No confirmed defect found in reviewed paths; no production-security claim.
+
+Milestone decision: staff identity/access foundation complete with approved gaps.
+Milestone 2 remains OPEN under its original complete-service/web-mobile definition.
+Do not relabel earlier milestone numbers. The old Task 10 recovery implementation
+plan is superseded by stabilization; controlled console recovery remains deferred.
+
+### Approved Task 11 direction — customer organizations
+
+Propose the smallest customer organization slice: model/migration, validation,
+Dispatcher policies, creation/list/details. Agree exact fields/status/uniqueness
+and test scope before coding; no implementation authorized by this roadmap.
+Administrator alone grants no operational access. Technician access to future
+customer data follows relevant assigned-work rules, not a general directory.
+
+Then introduce contacts linked to customers and sites owned by customers.
+Equipment belongs to a site and stays in the later equipment-register scope,
+rather than becoming a prerequisite for the first minimal work-order flow.
+Each relationship/policy is agreed and verified with its feature.
+Keep the first complete service workflow, versioned API and technician mobile
+execution in Milestone 2. Remaining full operations/equipment in Milestone 3.
+
+No permanent testing waiver: propose per-feature unit/feature checks, prove runtime
+isolation before persistence-dependent tests, obtain execution approval.
+No dedicated PostgreSQL integration suite. Recovery/remaining security gaps remain
+a visible follow-up, not silently resolved by starting customer development.
+Redis client, queues/workers/Horizon/Reverb, Sanctum/Expo/mobile and deployment/CI
+remain scheduled later; do not install or implement them implicitly.
