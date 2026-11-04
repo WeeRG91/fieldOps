@@ -13,6 +13,7 @@ export type User = {
 export type Auth = {
     user: User;
     canManageStaff: boolean;
+    canManageInvitations: boolean;
 };
 
 export type Passkey = {

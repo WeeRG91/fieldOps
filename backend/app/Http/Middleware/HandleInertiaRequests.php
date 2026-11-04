@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\StaffInvitation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -43,6 +44,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'canManageStaff' => Gate::allows('viewAny', User::class),
+                'canManageInvitations' => Gate::allows(
+                    'viewAny',
+                    StaffInvitation::class,
+                ),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

@@ -10,6 +10,7 @@ import type {
     StaffRoleOption,
     StaffRoleValue,
 } from '@/types/staff';
+import { formatUtc } from '@/lib/date';
 
 defineOptions({
     layout: {
@@ -132,7 +133,7 @@ function submitDeactivation(): void {
             </div>
             <div v-if="staff.deactivated_at">
                 <dt class="text-sm text-muted-foreground">Deactivated at</dt>
-                <dd>{{ staff.deactivated_at }}</dd>
+                <dd>{{ formatUtc(staff.deactivated_at) }}</dd>
             </div>
             <div v-if="staff.deactivation_reason" class="sm:col-span-2">
                 <dt class="text-sm text-muted-foreground">

@@ -7,8 +7,10 @@ Task 06 role/activation persistence is implemented and approved on 2026-11-02.
 Task 07 staff access, first-Administrator bootstrap and audit are implemented
 and approved on 2026-11-02. Task 08 existing-account staff administration,
 last-Administrator safeguards, audit and supported browser revocation are
-implemented and approved on 2026-11-02 with manual-only verification. Invitations,
-operational resource authorization and broader revocation remain deferred.
+implemented and approved on 2026-11-02 with manual-only verification. Task 09
+invitation-only provisioning is implemented and approved on 2026-11-04 with
+manual-only verification and explicit gaps. Operational resource authorization,
+controlled recovery and broader revocation remain deferred.
 Database-backed tests and runtime-isolation verification were explicitly deferred.
 Historical task sections describe their respective checkpoints.
 
@@ -1054,3 +1056,104 @@ and self-delete; registration suite skips instead of checking denial. Future tes
 scope/isolation and PostgreSQL-only/nonnested action strategy need agreement.
 Invitations Task 09; coverage/recovery later. Redis/queues/Horizon/Reverb remain
 visible planned infrastructure, not installed/configured by Task 08.
+
+## Task 09 — Invitation-only provisioning, 2026-11-04
+
+Implemented by developer; user approved manual-only results/gaps and documentation
+closeout. Earlier task checkpoints are historical. No new project dependency,
+queue, Redis/Horizon/Reverb/Sanctum/mobile implementation.
+
+### Policy and state
+
+Active verified Administrators manage invitations. Recipient is trimmed/lowercase,
+fixed at issue; ANY existing user (including inactive) rejects ordinary provisioning.
+Nonempty distinct fixed StaffRole list, none preselected. Administrator invitations
+require explicit extra approval and recent password, no second approver.
+Existing-account role/activation changes stay in ManageStaffAccess.
+Lifetime48h. States pending/expired/accepted/revoked/replaced; terminal timestamps
+take precedence over expiry. Resend creates fresh token/record/48h, supersedes old,
+keeps email/roles, current authorized actor becomes new inviter. Expired open rows
+are superseded before reissue. Revoked/expired email can be reinvited absent user.
+
+### Persistence and token handling
+
+Three applied migrations create staff_invitations, staff_invitation_roles and
+users_normalized_email_unique. Invitation schema has normalized email, char64
+unique hash, inviter/revoker/accepted-user restrict FKs, TZ timestamps, acceptance/
+revocation pairs. Accepted user unique. Checks enforce normalized nonempty email,
+lowercase hex hash, expires>created, paired fields, mutually exclusive terminal
+states. Partial unique email covers unterminated rows, including expired ones
+until replacement; no time-dependent partial-index predicate.
+Role table composite(invitation_id,role), constrained enum, no row timestamps.
+User functional unique index LOWER(BTRIM(email)) complements original unique index.
+Pre-migration collision query returned empty; no account merging/rewrite.
+
+random_bytes32 ->64 hex raw token, 256-bit entropy; SHA256 persisted/hash_equals
+verification. DTO uses SensitiveParameterValue and debug/JSON redaction/omission;
+do not serialize to jobs/session/cache. Email link uses /invitations/{id}/accept
+fragment #token=..., not HTTP query. Browser onMounted removes fragment and sends
+token in JSON preview then acceptance request body. dontFlash invitation_token
+extends framework password exclusions; useForm dontRemember secrets and clears
+password/form-token fields. No secret props/audit or intentional raw error logging.
+This does not prove absence from arbitrary request tooling, MailDev or JS memory.
+Production HTTPS/provider/observability requirements remain future.
+
+### Transaction and audit
+
+ManageStaffInvitations issue/resend/revoke require PostgreSQL/top-level transaction,
+SET TRANSACTION READ COMMITTED, shared pg_try_advisory_xact_lock(71001,1), fresh
+actor policy; relevant user row before invitation row. Same key as staff/bootstrap.
+Acceptance hashes password before lock, owns same protocol, reloads/locks inviter
+then invitation, rechecks token/state/expiry/inviter active verified authorization/
+stored role list/no existing account. New user active+verified, exact roles,
+accepted user/time and success audit commit together. Unique violation mapped
+after rollback to generic unavailable. Preview does not reserve invitation.
+Direct SQL/helpers bypass cooperating locks; reject SQLite/nested use.
+No simultaneous acceptance, contention or injected rollback executed for Task 09.
+
+Audit: staff.invitation_issued, staff.invitation_resent, staff.invitation_revoked,
+staff.invitation_accepted. Issuance/resend/revoke actor Administrator, null subject,
+selected invitation/roles/lifecycle metadata; accepted actor/subject=new user,
+metadata invitation_id/invited_by/roles. Success writes share mutation transaction.
+Only one acceptance row independently inspected. No new audit browsing/retention/
+tamper-resistance infrastructure.
+
+### Delivery and HTTP
+
+Notification synchronous SMTP AFTER commit; SendStaffInvitation requires outside
+transaction, catches delivery failure, returns warning retaining pending record.
+Sanitized log event/id/exception class, not exception message; resend rotates link.
+No atomic SMTP+DB/outbox/queued secret. Stale delivery may race cancellation;
+acceptance rechecks authoritative state. MailDev local SMTP1025/UI1080 verified,
+.env.example matching blank credentials. No external delivery/failure-path proof.
+
+Admin index/store/resend/revoke under /staff/invitations auth/staff/verified,
+policy viewAny, write authorization before recent-password confirmation, Form
+Requests, fresh action checks. Typed binding writes. Confirmation returns to GET
+list for explicit resubmit. Public GET acceptance (numeric ID, ID/mustSignOut only),
+POST inspect (token-gated recipient fields), POST accept. Guest-only POSTs; signed-in
+page asks deliberate signout/reopen. GET30/min, preview20/min, acceptance5/min IP.
+CSRF retained, no-store responses/no-referrer GET. Generic unavailable for invalid
+secret/terminal state/account collision. Accept name/password/confirmation/token
+only; min12 mixed case/number/symbol. Bearer acceptance verifies email, redirect
+login with status, no autologin/additional verification email.
+Inertia invitation conflicts redirect303 inline errors; acceptance throttle too.
+JSON/other clients retain statuses. These branches not manually exercised.
+
+Admin Vue typed paginated20 history/forms/explicit Admin confirmation/status/actions/
+errors/toasts and auth.canManageInvitations sidebar capability. Public preview
+then acceptance; server remains authority. Shared lib/date.ts formatUtc(en-GB UTC)
+used for invitations and staff deactivation details; ISO response conversion UTC.
+Raw offset was mislabeled UTC initially, corrected without storage migration.
+
+### Verification limits
+
+Manual lifecycle/selected auth denial/persistence/audit passed; see TASK_LOG and
+handover for exact evidence. Sequential consumed-link rejection is not concurrency
+proof. No automated tests/isolation run/dedicated PostgreSQL suite. SQLite cannot
+execute locking/partial functional PostgreSQL schema unchanged or establish races.
+User approved deferral of privileged payloads, SMTP failure, issuer eligibility
+changes, concurrency/rollback and broader cases. Administrator-grant branch,
+signed-in denial, limits/JSON, time boundary, post-issue account collision,
+re-invitation branches, complete audit/log secret inspection remain unverified.
+Do not claim production readiness or resolution of Task 08 gaps.

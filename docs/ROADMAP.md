@@ -11,7 +11,7 @@ were approved on 2026-11-01. Task 04 PostgreSQL development and authentication
 smoke verification are complete; automated tests were skipped by user request.
 Task 04 results and that testing exception were approved on 2026-11-01.
 
-Tasks 01–08 are complete and approved; see the latest progress section below.
+Tasks 01–09 are complete and approved; see the latest progress section below.
 Business scope, architecture, and engineering conventions are approved.
 
 The Laravel/Vue starter application exists in backend/; no business modules exist.
@@ -394,7 +394,7 @@ Keep profile email changes blocked until safety rules exist. Invitations remain
 Task 09; broader authorization coverage and controlled recovery Task 10.
 Deferred Task 07 checks require agreed scope; no infrastructure implicitly authorized.
 
-## Current progress after Task 08 — 2026-11-02
+## Historical checkpoint after Task 08 — 2026-11-02
 
 Tasks 01–08 complete with user approval. Task 08 delivered staff directory/details,
 admin policy, no self changes, validated roles/state, PostgreSQL shared locking/
@@ -418,3 +418,31 @@ Redis PHP client, queues/workers, Horizon cross-platform dependencies and Reverb
 integration remain planned infrastructure; none installed/configured in Task 08.
 Initial notifications may send synchronously after commit. Sanctum/mobile/Expo
 and root CI future; no infrastructure install authorization implied.
+
+## Current progress after Task 09 — 2026-11-04
+
+Tasks 01–09 complete with user approval and manual-only exceptions recorded.
+Task 09 delivered Administrator invitation issue/history/resend/revoke, fixed
+normalized email/roles, 48h hashed random secrets, SMTP after commit/local MailDev,
+guest preview/atomic acceptance/active verified account/audit, public throttles
+and secret-handling protections. Three PostgreSQL migrations applied; no new
+dependencies or infrastructure. Shared UTC formatter also used by staff details.
+
+Manual passed: issuance/capture, Dispatcher acceptance/login and admin-page403,
+accepted linkage/audit, consumed/resend/revoked/expired/tampered link rejection,
+existing-user and duplicate pending refusal. No automated tests, test isolation,
+simultaneous acceptance or rollback-fault injection. User approved remaining
+payload/SMTP failure/issuer changes/concurrency/rollback gaps; handover lists other
+unverified branches. PostgreSQL transaction implementation is not execution proof.
+PHPStan74, targeted Pint, frontend lint66/types/build and later date checks passed
+as recorded; final small template/mail example edits after checkpoint not rechecked.
+No dedicated PostgreSQL test suite; future DB test scope/isolation must be agreed.
+
+Task 08 commit edc9cc9; current feat/staff-invitations with partial staged/working/
+untracked Task 09 files. No automatic Git action. Fixtures retained, no resets.
+Next Task 10: agree authorization coverage and controlled console recovery with
+existing shared lock, last-usable-admin safety and audit. Review deferred checks
+without assuming authorization for tests or package installs. Preserve closed
+public registration, no self escalation, blocked email changes.
+Redis PHP client/queues/workers/Horizon/Reverb, Sanctum/mobile/Expo, operational
+domain modules and CI remain planned; no installation implied by this closeout.

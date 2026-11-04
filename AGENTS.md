@@ -302,3 +302,50 @@ passed by developer report, no counts supplied.
 Current feat/staff-administration, latest commit 9f06938, staged/unstaged/untracked
 Task 08 work; no assistant Git mutation. Next Task 09 invitation-only provisioning
 and atomic acceptance/audit per Task 05, honoring shared lock and explicit scope.
+
+## Task 09 invitation provisioning — approved 2026-11-04
+
+Task 09 implemented by developer; manual results/gaps approved and continuity
+updates explicitly authorized. This supersedes older "invitations future" and
+Task 08 Git-state statements. Current feat/staff-invitations tracks origin;
+Task 08 commit edc9cc9. Task 09 mixed AM/staged/unstaged/untracked; do not commit old
+staged scaffolds. project-commands.txt local untracked. No assistant Git mutation.
+
+StaffInvitation/policy, role relation, three applied PostgreSQL migrations,
+Manage/Send/Validate/Inspect/Accept actions, sensitive delivery DTO/notification,
+requests/controllers/password-confirmation middleware, routes and Vue pages exist.
+Only active verified Admins manage invitations; no existing account, normalized
+fixed email and explicit roles; Administrator additionally confirmed/recent password.
+48h SHA256-hashed 256-bit random tokens, resend supersedes/fresh record+issuer,
+revocation/expiry/consumption reject. Acceptance guest-only active+verified new
+user with stored roles+consume+audit in one transaction; redirects login.
+
+Invitation writes share PostgreSQL advisory try-lock(71001,1), READ COMMITTED,
+fresh issuer/actor and row locking with staff/bootstrap; require own transaction,
+reject SQLite/nesting. Preserve protocol for recovery. Token fragment becomes
+POST body, not props/querystring; dontFlash/dontRemember protect secrets.
+No plaintext token logs/audit intended; absence was not exhaustively inspected.
+MailDev existing local SMTP127.0.0.1:1025/UI1080; notification forces SMTP,
+synchronous after commit, warning retains record on failure. No atomic email/DB,
+outbox, queue, production delivery or failure verification. .env.example now SMTP.
+Shared resources/js/lib/date.ts formatUtc reused by invitations/staff details.
+
+Developer checks: PHPStan74/no errors512MiB (before later UTC response tweaks),
+targeted Pint7 fixed4; frontend lint66/types/build3586 passed, Inertia middleware
+Pint1. Later date-helper frontend checks/two invitation-controller Pint passed by
+report. Final duplicate-error deletion/mail example edits after quality checkpoint,
+no repeat claimed; separate syntax run only migration checkpoint, not full Task 09.
+No automated tests/new tests/runtime isolation. User approved manual-only closeout
+and deferred payloads, SMTP failure, issuer changes, concurrency/rollback, other
+coverage listed in handover; do not run DB tests without agreed scope/isolation.
+
+Manual: issue/local capture/preview/accept/login; Dispatcher user3 active verified,
+Adminfalse; hidden nav and /staff,/staff/invitations403; consumed/resend/revoked/
+expired/tampered links rejected; existing user/duplicate issue rejected. Accepted
+invitation1/user3 and one success audit inspected (actor3/subject3/inviter1).
+No unauthorized POST, simultaneous acceptance or forced rollback claim.
+Retain user2inactive; user3 fieldops.invitation@example.test activeDispatcher;
+resend fixture replaced/revoked, invitation4 artificially expired (49h-old creation,
+48h lifetime; original issuance audit unchanged); validation fixture unaccepted/
+pending at verification. No cleanup requested. Primary1 not role/state modified.
+Task 10 recommended coverage/controlled console recovery; infrastructure still later.

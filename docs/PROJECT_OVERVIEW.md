@@ -19,8 +19,9 @@ Task 07 controlled staff access, closed public registration/self-deletion and
 first-Administrator bootstrap with audit are implemented. Results and verification
 limitations were approved on 2026-11-02. Task 08 existing-account administration,
 protected role/state changes, audit and supported browser revocation are implemented;
-manual results and gaps approved on 2026-11-02. Invitations and operational modules
-remain future work.
+manual results and gaps approved on 2026-11-02. Task 09 invitation-only provisioning
+is implemented; manual results/gaps and closeout approved on 2026-11-04. Operational
+modules remain future work.
 Business scope is unchanged.
 
 ## Purpose
@@ -246,3 +247,24 @@ completion requirements, and review before closure.
 
 Actual checks, limitations, and deferred tests are recorded in the task
 log and project handover.
+
+## Implemented staff onboarding — Task 09, 2026-11-04
+
+An active verified Administrator can invite a new staff member with a fixed email
+and explicitly selected roles. No role is preselected. Administrator access needs
+extra explicit confirmation and recent password confirmation. Multiple explicit
+roles/no inherited Administrator bypass remain the approved model.
+
+Invitations last48h, are single-use and can be revoked. Resend replaces the old
+link while retaining email/roles. Existing accounts are managed through staff
+administration, never silently reactivated/reset/granted roles by an invitation.
+On acceptance the recipient supplies name/password; valid bearer link establishes
+email ownership. Account active+verified with invitation roles and success audit
+are committed together, then recipient logs in normally. Public registration
+remains closed. Local invitation mail capture uses MailDev, not external delivery.
+
+Selected lifecycle/authorization/persistence checks passed manually; atomicity and
+concurrency safeguards are implemented but not verified by forced failure or
+simultaneous acceptance. No automated Task 09 tests; approved gaps are in TASK_LOG
+and handover. Task 09 changes identity onboarding, not the operational MVP scope.
+Customers/sites/work orders/API/mobile and real-time operations remain future.

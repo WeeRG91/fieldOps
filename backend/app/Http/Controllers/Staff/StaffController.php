@@ -74,7 +74,7 @@ class StaffController extends Controller
         return Inertia::render('staff/Show', [
             'staff' => [
                 ...$this->presentStaff($staff, $roles),
-                'deactivated_at' => $staff->deactivated_at?->toIso8601String(),
+                'deactivated_at' => $staff->deactivated_at?->utc()->toIso8601String(),
                 'deactivated_by' => $staff->deactivated_by,
                 'deactivation_reason' => $staff->deactivation_reason,
             ],

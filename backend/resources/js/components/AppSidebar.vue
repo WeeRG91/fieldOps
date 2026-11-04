@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, Users } from '@lucide/vue';
+import { BookOpen, FolderGit2, LayoutGrid, Users, Mail } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -18,6 +18,7 @@ import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import { computed } from 'vue';
 import { index as staffIndex } from '@/routes/staff';
+import { index as invitationIndex } from '@/routes/staff/invitations';
 
 const page = usePage();
 
@@ -35,6 +36,14 @@ const mainNavItems = computed<NavItem[]>(() => {
             title: 'Staff',
             href: staffIndex(),
             icon: Users,
+        });
+    }
+
+    if (page.props.auth.canManageInvitations) {
+        items.push({
+            title: 'Invitations',
+            href: invitationIndex(),
+            icon: Mail,
         });
     }
 

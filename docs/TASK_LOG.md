@@ -911,3 +911,154 @@ remain. Next Task 09 invitation-only provisioning/atomic acceptance per Task 05,
 shared lock, token lifecycle, audit, explicit notification/testing scope.
 Redis/queues/Horizon/Reverb visible deferred infrastructure, no install implied.
 Documentation closeout uses source/user outputs; no app checks rerun by assistant.
+
+## Task 09 — Invitation-only staff provisioning, completed 2026-11-04
+
+### Approval and scope
+
+Developer implemented application code and ran commands; assistant read/reviewed
+and mentored. On 2026-11-04 user confirmed final UI change, accepted manual-only
+closeout/deferred verification scope and explicitly requested continuity updates
+to wrap up Task 09. No assistant app edits/install/migration/Git mutation.
+All six continuity files updated. No new project dependencies, DB reset or mobile/
+queue/Horizon/Reverb infrastructure. No automated tests/new test files/isolation
+verification; this is the approved Task 09 exception, not a new global testing ban.
+
+### Recovery and decisions
+
+Task 08 merged at edc9cc9, superseding its old precommit handover; current
+feat/staff-invitations tracks origin/feat/staff-invitations. Task 09 AM/staged/
+unstaged/untracked, some index entries old scaffolds. project-commands.txt local
+untracked. No Task 09 commit/merge reported; do not commit partial staged snapshots.
+Existing docs/identity/staff/schema/auth/mail/test/Git inspected; Task05 policy
+preserved. Active verified Admin invitation management; normalized fixed recipient,
+explicit distinct nonempty fixed roles, no existing account (including inactive).
+Admin invitation requires extra explicit confirmation/recent password, no second
+approver. New bearer acceptance active+verified, own password, login redirect.
+No silent existing account modification/public registration/self escalation.
+
+### Implementation
+
+Three additive migrations (names in handover) create invitations/constrained role
+relation and normalized-user-email unique functional index. Preflight normalized
+collision collection empty, target fieldops_dev/fieldops_app verified. All three
+migrate DONE, developer output154.95ms/5.51ms/3.09ms. No final migration status repeat.
+Schema checks hash/email/expiry/pairs/exclusive lifecycle; partial unique normalized
+email on unterminated records, expired rows superseded before replacement.
+Fixed48h. Secure token32 random bytes/64hex, SHA256 storage/hash_equals.
+Delivery DTO/native sensitive wrapper redacts debug/JSON, never flash/props/audit.
+No exhaustive runtime secret-inspection claim.
+
+ManageStaffInvitations owns issue/resend/revoke; resend new record/token/48h and
+new acting inviter, fixed roles/email, prior row superseded. Audit each mutation.
+ValidateStaffInvitation reused by Inspect/Accept; preview no reservation.
+AcceptStaffInvitation owns PostgreSQL READ COMMITTED transaction, shared advisory
+try-lock(71001,1), fresh locked inviter then invitation, revalidates secret/state/
+expiry/authority/roles/collision. Hash password before lock; new user+roles+
+activation/verification+consume+audit share transaction. Unique violation generic
+after rollback. No nesting/SQLite. Direct SQL/helpers bypass cooperation.
+
+Existing MailDev2.2.1 used through current Node and old nvm entrypoint, bound
+localhost SMTP1025/UI1080. SMTP capture smoke passed. Ignored .env and safe
+.env.example changed to local SMTP/null credentials/FieldOps sender.
+StaffInvitationNotification/SendStaffInvitation synchronous after commit,
+SMTP forced not log. Delivery failure leaves saved invitation/warning; resend
+invalidates old link. No atomic mail/DB/outbox. Only local captures verified.
+
+Public numeric-ID GET acceptance, POST preview/acceptance; guest-only requests,
+CSRF, limits30/20/5 per minute IP, secret dontFlash, no-store/no-referrer.
+GET only ID/mustSignOut; secret URL fragment read browser-only/removed, preview
+POST validates before selected recipient fields. Acceptance input name/password/
+confirmation/token, missing specified privileged fields; min12 mixed case/number/
+symbol. Vue dontRemember secrets/clear fields; redirect login no automatic login.
+Admin index/store/resend/revoke, policy/requests/recent-password middleware/fresh
+action authorization; history20/page, explicit roles/Admin confirmation, errors/
+toasts/resend/revoke; sidebar policy capability. Inertia conflicts/throttle inline
+handlers. Wrong Inspect request import on admin store found by review and fixed.
+Static review also corrected logical operator/confirmed key/boolean existence
+errors earlier; static checks alone did not establish business correctness.
+
+Shared lib/date.ts Intl en-GB UTC formatter added, used by two invitation pages
+and existing staff details. Both invitation controllers and existing StaffController
+UTC response conversion; offset mislabeled UTC corrected without storage rewrite.
+Duplicate email error summary+field display removed at end.
+
+### Files
+
+Full exact inventory in PROJECT_HANDOVER.md. New model/policy; five Staff actions;
+sensitive DTO/notification; public/admin controllers; three staff requests/two public
+requests; confirmation middleware; three migrations; public/admin Vue pages,
+invitation types, shared date helper. Modified routes/bootstrap/AppServiceProvider/
+Inertia shared props/sidebar/auth types/.env.example; ignored local .env;
+existing StaffController/Show.vue UTC presentation. Generated Wayfinder/assets.
+Assistant changed only AGENTS and five continuity docs with explicit authorization.
+
+### Executed checks
+
+Developer evidence:
+- Migration php -l/Pint3 passed; PHPStan57 at migration checkpoint.
+- Later PHPStan59/61/63/65/66/69 checkpoints; final admin-backend74/no errors,
+  --memory-limit=512M. No rerun after small UTC response changes.
+- Targeted Pint7 files fixed4 issues; route:list3 public/four admin with middleware.
+- Frontend check:fix formatting completed, lint66/no warnings/errors, vue-tsc passed,
+  production build3586 modules passed; Inertia middleware Pint1 PASS.
+- Date changes: check:fix/types/build and two invitation-controller Pint --test
+  reported all passed, no detailed counts. Extra existing StaffController UTC
+  change not in that targeted list; no separately claimed result.
+- Final duplicate-error import/template deletion and .env.example update after
+  quality checkpoint, no repeat frontend check claimed.
+- No full final Pint/separate full php -l/automated tests/runtime-isolation run.
+  Earlier Task03 generated40 tests are historical, not Task 09 results.
+
+### Manual PostgreSQL/browser evidence
+
+- Target fieldops_dev/fieldops_app, unused acceptance fixture email/no invitations.
+- Admin issue Dispatcher to fieldops.invitation@example.test; user reported
+  expected form/history/local MailDev success. No account until acceptance;
+  that intermediate absence was expected, not independently queried.
+- Signed-out preview correct fixed email/Dispatcher/expiry/form; fragment removal
+  not separately confirmed. Accepted success message/login redirect; user3
+  Invitation Staff login/dashboard/no extra verification prompt reported as
+  successful workflow, hidden Staff/Invitations; direct both GET403 confirmed.
+- Tinker user3 active=true, verified=true, Dispatcher=true, Admin=false;
+  invitation1 accepted and accepted_user_id matches. Exactly one selected
+  staff.invitation_accepted row inspected: actor_type user/actor3/subject3,
+  metadata invitation_id1/invited_by1/dispatcher. No passwords/hashes documented.
+- Signed-out reopening original accepted link unavailable/no form.
+- Technician fieldops.resend@example.test: resend old replaced/new pending,
+  second capture, old link unavailable/new preview correct collectively confirmed.
+  Revocation then latest link unavailable confirmed. No acceptance.
+- Invitation4 fieldops.expiry@example.test manually changed created_at to49h
+  ago/expires48h after; guarded target/status check, status expired output.
+  Original email link unavailable confirmed. Artificial expiry fixture, not real
+  elapsed-time/boundary test; original issuance audit unchanged.
+- Existing accepted email issue returned 'An account already exists for this email.'
+  Subsequent unchanged roles/no extra email not independently queried.
+- New Technician fieldops.validation@example.test pending; duplicate returned
+  'A pending invitation already exists. Use Resend.' No extra-email/row count
+  independently checked. Duplicate inline display prompted final UI cleanup.
+- Original link token last hex character modified: unavailable/no form.
+  This proves valid-format tamper rejection, not all malformed-token cases.
+- No final fixture cleanup requested. User2inactive retained from Task 08, user3
+  activeDispatcher retained; primary1 not role/state changed; resend fixture
+  revoked, fixture4expired, validation fixture pending when checked.
+
+### Approved exceptions, limitations and next task
+
+No automated tests/new tests/isolation proof; no dedicated PostgreSQL suite.
+SQLite cannot execute these PostgreSQL actions/constraints unchanged or verify
+advisory locks/concurrency. Legacy test/factory assumptions still need revision.
+User approved deferring privileged HTTP payloads, SMTP failure, inviter eligibility
+changes, concurrent acceptance/rollback and broader gaps. Administrator invitation,
+signed-in acceptance denial, rate-limit/JSON branches, boundary expiry, casefold/
+trim collisions, expired/revoked reissue, post-issuance account collision, exhaustive
+audits/log secret inspection and multi-page pagination unverified.
+Unauthorized GET403 is not issuance POST coverage. Sequential consumed-link
+rejection is not simultaneous acceptance evidence. Transaction code reviewed,
+not tested by forced write/audit failure. No absence-of-plaintext or password-hash
+runtime audit. SMTP capture is not external delivery/atomic email guarantee.
+Task 08 last-admin/remember-me/session races/inherited auth gaps persist.
+
+Task 10 recommended: agreed authorization coverage/controlled console recovery,
+shared lock+usable-admin safety+transactional audit, no public recovery/self bypass.
+Redis client/queues/Horizon/Reverb/Sanctum/Expo/mobile/business modules/CI deferred.
